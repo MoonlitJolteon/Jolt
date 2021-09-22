@@ -1,5 +1,7 @@
 const { KlasaClient, Schema } = require('klasa');
-const { config, token } = require('./config');
+const { config } = require('./config');
+require('dotenv').config();
+const token = process.env.TOKEN;
 
 KlasaClient.defaultUserSchema
     .add('floatPoints', 'integer', {default: 0})
