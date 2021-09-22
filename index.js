@@ -19,24 +19,3 @@ KlasaClient.defaultPermissionLevels
 const client = new KlasaClient(config);
 
 client.login(token);
-
-
-//importing modules
-const express = require("express");
-const exphbs = require("express-handlebars");
-
-// Express server's instance
-const app = express();
-
-const PORT = process.env.PORT || 3000;
-
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
-
-app.use(express.static("images"));
-
-app.get("/", (req, res) => {
-    res.render("main")
-})
-// Listening
-app.listen(PORT, () => console.log(`Server started running on PORT ${PORT}`));
