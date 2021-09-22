@@ -18,4 +18,5 @@ KlasaClient.defaultPermissionLevels
 
 const client = new KlasaClient(config);
 
+require("./server").keepAlive();
 client.login(token);
