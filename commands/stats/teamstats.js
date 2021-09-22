@@ -126,7 +126,8 @@ module.exports = class extends Command {
                 background,
                 matches,
                 rank
-            }
+            },
+            puppeteerArgs: { args: ["--no-sandbox"] }
         })
 
         let attach = new MessageAttachment(image);

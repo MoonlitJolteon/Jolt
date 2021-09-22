@@ -138,8 +138,9 @@ module.exports = class extends Command {
         }
         
         let image = await nodeHtmlToImage({
-            html: html,
-            content
+            html,
+            content,
+            puppeteerArgs: { args: ["--no-sandbox"] }
         })
 
         let attach = new MessageAttachment(image);

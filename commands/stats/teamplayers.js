@@ -101,7 +101,8 @@ module.exports = class extends Command {
                 panel,
                 background,
                 recruiting
-            }
+            },
+            puppeteerArgs: { args: ["--no-sandbox"] }
         })
         let attach = new MessageAttachment(image);
         msg.delete();
