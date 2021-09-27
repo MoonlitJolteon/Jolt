@@ -72,6 +72,11 @@
   .loss {
     background: #ff3737a2;
   }
+.forfeit {
+  background: #ffa701a2;
+}
+    
+
   </style>
 </head>
 <body {{{background}}}>
@@ -95,9 +100,9 @@
       <br style="line-height: 0.3em;">
         {{#each matches}}
         {{#if this.searchedTeamWon}}
-        <p class="match-info win"><b><i>{{this.winningTeam.name}} ({{this.winningTeam.score}})</i></b> Won Vs <b><i>{{this.losingTeam.name}} ({{this.losingTeam.score}})</i></b> on {{this.date}}<br></p>
+        <p class="match-info {{#if forfeit}}forfeit{{else}}win{{/if}}"><b><i>{{this.winningTeam.name}} ({{this.winningTeam.score}})</i></b> Won Vs <b><i>{{this.losingTeam.name}} ({{this.losingTeam.score}})</i></b> on {{this.date}}<br></p>
         {{else}}
-        <p class="match-info loss"><b><i>{{this.losingTeam.name}} ({{this.losingTeam.score}})</i></b> Lost Vs <b><i>{{this.winningTeam.name}} ({{this.winningTeam.score}})</i></b> on {{this.date}}<br></p>
+        <p class="match-info {{#if forfeit}}forfeit{{else}}loss{{/if}}"><b><i>{{this.losingTeam.name}} ({{this.losingTeam.score}})</i></b> Lost Vs <b><i>{{this.winningTeam.name}} ({{this.winningTeam.score}})</i></b> on {{this.date}}<br></p>
         {{/if}}
         {{/each}}
     </div>

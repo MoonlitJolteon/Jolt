@@ -44,7 +44,8 @@ module.exports = class extends Command {
         let html = "<head><style>body{width:100px; height:50px;}</style></head><body>Error Encountered</body>";
         
         let name = oculusUsername ? oculusUsername :  message.author.settings.oculusName ? message.author.settings.oculusName : invalid;
-        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("Please set your oculus name first using `!oculusname set <name>`, or search for another user using `!stats <name>`");
+        let prefix = message.guild.settings.prefix[0]
+        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Please set your oculus name first using \`${prefix}oculusname set <name>\`, or search for another user using \`${prefix}stats <name>\``);
         if(name == invalid) return msg.edit({embed});
         
         let player = await vrml.getPlayerCache(name);

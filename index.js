@@ -2,7 +2,7 @@ const { KlasaClient, Schema } = require('klasa');
 const { config } = require('./config');
 require('dotenv').config();
 const token = process.env.TOKEN;
-
+process.env.TZ = 'America/Indiana/Indianapolis' 
 KlasaClient.defaultUserSchema
     .add('floatPoints', 'integer', {default: 0})
     .add('missedPractices', 'integer', {default: 0})

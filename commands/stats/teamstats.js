@@ -43,7 +43,8 @@ module.exports = class extends Command {
         let msg;
         let html = "<head><style>body{width:100px; height:50px;}</style></head><body>Error Encountered</body>";
 
-        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("Set your oculus username using `!oculusname set <username>` to use this command without a teamname, or search for a team by doing `!upcoming <teamname>`.");
+        let prefix = message.guild.settings.prefix[0]
+        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Set your oculus username using \`${prefix}oculusname set <username>\` to use this command without a teamname, or search for a team by doing \`${prefix}upcoming <teamname>\`.`);
         if(!teamName) {
             let name = message.author.settings.oculusName ? message.author.settings.oculusName : invalid;
             msg = await message.send(`Searching for your team...`)
@@ -63,6 +64,7 @@ module.exports = class extends Command {
         let division = teamInfo.division;
         let teamWL = `${teamInfo.w}-${teamInfo.t}-${teamInfo.l}`
         let rank = teamInfo.rank;
+        teamName = teamInfo.name;
 
         await msg.edit(`Searching for ${teamName}'s matches...`)
         let teamID = teamInfo.id;
@@ -103,12 +105,14 @@ module.exports = class extends Command {
             let searchedTeamWon = teamInfo.name == winningTeam.name;
             let datetime = new Date(`${match.dateScheduled} GMT+0000`);
             let date = `${numsToDate.numToMonth(datetime.getMonth(), true)} ${datetime.getDate()}`;
+            let forfeit = match.mapsSet[0].mapName == 'Other';
             let newMatch = {
                 winningTeam,
                 losingTeam,
                 searchedTeamWon,
                 match,
-                date
+                date, 
+                forfeit
             }
             matches.push(newMatch);
         }

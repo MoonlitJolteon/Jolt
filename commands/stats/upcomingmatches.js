@@ -42,7 +42,8 @@ module.exports = class extends Command {
         let msg;
         let html = "<head><style>body{width:100px; height:50px;}</style></head><body>Error Encountered</body>";
 
-        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("Set your oculus username using `!oculusname set <username>` to use this command without a teamname, or search for a team by doing `!upcoming <teamname>`.");
+        let prefix = message.guild.settings.prefix[0]
+        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Set your oculus username using \`${prefix}oculusname set <username>\` to use this command without a teamname, or search for a team by doing \`${prefix}upcoming <teamname>\`.`);
         if(!teamName) {
             let name = message.author.settings.oculusName ? message.author.settings.oculusName : invalid;
             msg = await message.send(`Searching for your team...`)
@@ -105,16 +106,31 @@ module.exports = class extends Command {
             generated.setDate(generated.getDate() - (generated.getDay() + 6) % 7);
             generated.setHours(9, 0, 0, 0);
             let scheduled = generated < datetime;
+            let current = new Date()
+            let pastTime = current > datetime;
             let newMatch = {
                 teams,
                 scheduled,
                 scheduledText: scheduled ? "scheduled" : "not-scheduled",
                 match,
                 date,
-                time
+                time, 
+                pastTime
             }
             matches.push(newMatch);
         }
+
+        let castingLinks = "";
+        matches.forEach(match => {
+          if(match.match.castingInfo.caster) {
+            if(match.match.castingInfo.channel) {
+              castingLinks += `***${match.teams.awayTeam} vs ${match.teams.homeTeam}:*** ${match.match.castingInfo.channel}`;
+            } else {
+              castingLinks += `***${match.teams.awayTeam} vs ${match.teams.homeTeam}:*** No Link Available Yet`;
+            }
+          }
+        })
+
         let content = {
             logoSource: teamLogoURL,
             teamName: teamInfo.name,
@@ -136,7 +152,7 @@ module.exports = class extends Command {
 
         let attach = new MessageAttachment(image);
         msg.delete();
-        message.send(attach);
+        message.send(castingLinks, {files: [attach]});
 
     
     }

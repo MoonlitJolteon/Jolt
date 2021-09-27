@@ -95,7 +95,7 @@
       <br style="line-height: 0.5em;">
         <h5 style="margin-top: -7px !important; margin: 5px; background: #b1b1b1a9; border-radius: 5px; border: 5px solid #222222a9">Upcoming Matches</h3> 
         {{#each matches}}
-        <p class="match-info {{this.scheduledText}}">
+        <p class="match-info {{this.scheduledText}}" {{#if this.scheduled}}{{#if this.pastTime}}style="background: #FFA500A0 !important;"{{/if}}{{/if}}>
           <b><i>{{this.teams.awayTeam}}(✭{{this.match.awayBetCount}}) VS {{this.teams.homeTeam}}(✭{{this.match.homeBetCount}})</i></b><br style="line-height: 1em;">
           {{#if this.scheduled}}{{this.date}} @ {{this.time}} Eastern{{else}}Not Yet Scheduled{{/if}}<br>
           {{#if this.match.castingInfo.caster}}<b>Being casted by {{this.match.castingInfo.caster}}</b>{{else}}Votes for casting: {{#if this.match.castUpvotes}}{{this.match.castUpvotes}}{{else}}0{{/if}}{{/if}}</p>

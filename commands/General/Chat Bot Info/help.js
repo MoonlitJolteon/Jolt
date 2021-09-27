@@ -17,7 +17,7 @@ module.exports = class extends Command {
 			.setAuthor("Created by MoonlitJolteon", 'https://cdn.discordapp.com/avatars/237360479624757249/a_a74caf90d6f72ebe7877812d39f53eb7.webp', 'https://vrmasterleague.com/EchoArena/Players/Pq1xQLQziZxndaFTWAA2oA2')
 			.setColor("#9E2CB2")
 			.setTitle("What is NaniBot?")
-			.setDescription("NaniBot is a bot for scouting out other teams created by Nani Reforged")
+			.setDescription("NaniBot is a bot for scouting out other teams, created by Nani Reforged")
 			.addField(
 				"Why create NaniBot instead of using Ignite stats?",
 				"While Ignite stats are useful for scouting out individual players, it has little to no functionality when it comes to scouting out teams."
@@ -26,7 +26,7 @@ module.exports = class extends Command {
 				"NaniBot has various commands for scouting out teams, most if not all are listed below.\nArguments are shown like this: <required> [optional]"
 			).addField(
 				`${prefix}oculusname set <name>`,
-				"This will save your oculus username to the bot's storage, allowing you to use !stats without giving your username."
+				"This will save your oculus username to the bot's storage, allowing you to use stat commands without giving your username."
 			).addField(
 				`${prefix}oculusname clear`,
 				"This will clear the saved username."

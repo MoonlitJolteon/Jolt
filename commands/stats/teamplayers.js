@@ -40,8 +40,9 @@ module.exports = class extends Command {
     async run(message, [teamName, ...params]) {
         let msg;
         let html = "<head><style>body{width:100px; height:50px;}</style></head><body>Error Encountered</body>";
-
-        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("Set your oculus username using `!oculusname set <username>` to use this command without a teamname, or search for a team by doing `!upcoming <teamname>`.");
+        
+        let prefix = message.guild.settings.prefix[0]
+        let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Set your oculus username using \`${prefix}oculusname set <username>\` to use this command without a teamname, or search for a team by doing \`${prefix}upcoming <teamname>\`.`);
         if(!teamName) {
             let name = message.author.settings.oculusName ? message.author.settings.oculusName : invalid;
             msg = await message.send(`Searching for your team...`)
