@@ -33,7 +33,7 @@ module.exports = class extends Command {
     }
 
     async run(message, [...params]) {
-        await fsp.rm("./vrmlCache", { recursive: true }).then(message.send("Done!"));
+        await fsp.rm("./cache", { recursive: true }).then(message.send("Done!"));
     }
 
     async init() {

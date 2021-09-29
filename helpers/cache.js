@@ -15,7 +15,7 @@ module.exports = {
     async fetch(filename, fetchFunction) {
         let cachedDate = 0;
         try{
-             cachedDate = await getFileUpdatedDate(`./vrmlCache/${filename}.json`);
+             cachedDate = await getFileUpdatedDate(`./cache/${filename}.json`);
         } catch (e) {
             if(e.errno != -4058) {
                 console.error(e)
@@ -23,7 +23,7 @@ module.exports = {
         }
         let cacheAge = new Date() - cachedDate;
         let msg = `Cache is recent, no need to recache (Cache age (seconds): ${cacheAge/1000})`;
-        let target = `./vrmlCache/${filename}.json`
+        let target = `./cache/${filename}.json`
         if(cacheAge > MAX_AGE) {
             let data = await fetchFunction();
             await fsp.mkdir(getDirFromPath(target), {recursive: true})
@@ -39,7 +39,7 @@ module.exports = {
     async fetch(filename, fetchFunction, arg) {
         let cachedDate = 0;
         try{
-             cachedDate = await getFileUpdatedDate(`./vrmlCache/${filename}.json`);
+             cachedDate = await getFileUpdatedDate(`./cache/${filename}.json`);
         } catch (e) {
             if(e.errno != -4058) {
                 console.error(e)
@@ -47,7 +47,7 @@ module.exports = {
         }
         let cacheAge = new Date() - cachedDate;
         let msg = `Cache is recent, no need to recache (Cache age (seconds): ${cacheAge/1000})`;
-        let target = `./vrmlCache/${filename}.json`;
+        let target = `./cache/${filename}.json`;
         if(cacheAge > MAX_AGE) {
             let data = await fetchFunction(arg);
             await fsp.mkdir(getDirFromPath(target), {recursive: true})
@@ -63,7 +63,7 @@ module.exports = {
     async fetchTwoArgs(filename, fetchFunction, arg1, arg2) {
         let cachedDate = 0;
         try{
-             cachedDate = await getFileUpdatedDate(`./vrmlCache/${filename}.json`);
+             cachedDate = await getFileUpdatedDate(`./cache/${filename}.json`);
         } catch (e) {
             if(e.errno != -4058) {
                 console.error(e)
@@ -71,7 +71,7 @@ module.exports = {
         }
         let cacheAge = new Date() - cachedDate;
         let msg = `Cache is recent, no need to recache (Cache age (seconds): ${cacheAge/1000})`;
-        let target = `./vrmlCache/${filename}.json`;
+        let target = `./cache/${filename}.json`;
         if(cacheAge > MAX_AGE) {
             let data = await fetchFunction(arg1, arg2);
             await fsp.mkdir(getDirFromPath(target), {recursive: true})
@@ -87,7 +87,7 @@ module.exports = {
     async fetchCustomExpire(filename, fetchFunction, maxAge) {
         let cachedDate = 0;
         try{
-             cachedDate = await getFileUpdatedDate(`./vrmlCache/${filename}.json`);
+             cachedDate = await getFileUpdatedDate(`./cache/${filename}.json`);
         } catch (e) {
             if(e.errno != -4058) {
                 console.error(e)
@@ -95,7 +95,7 @@ module.exports = {
         }
         let cacheAge = new Date() - cachedDate;
         let msg = `Cache is recent, no need to recache (Cache age (seconds): ${cacheAge/1000})`;
-        let target = `./vrmlCache/${filename}.json`
+        let target = `./cache/${filename}.json`
 
         if(cacheAge > maxAge) {
             let data = await fetchFunction();
@@ -112,7 +112,7 @@ module.exports = {
     async fetchCustomExpire(filename, fetchFunction, arg, maxAge) {
         let cachedDate = 0;
         try{
-             cachedDate = await getFileUpdatedDate(`./vrmlCache/${filename}.json`);
+             cachedDate = await getFileUpdatedDate(`./cache/${filename}.json`);
         } catch (e) {
             if(e.errno != -4058) {
                 console.error(e)
@@ -120,7 +120,7 @@ module.exports = {
         }
         let cacheAge = new Date() - cachedDate;
         let msg = `Cache is recent, no need to recache (Cache age (seconds): ${cacheAge/1000})`;
-        let target = `./vrmlCache/${filename}.json`;
+        let target = `./cache/${filename}.json`;
         if(cacheAge > maxAge) {
             let data = await fetchFunction(arg);
             if(data == undefined) return "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
@@ -137,7 +137,7 @@ module.exports = {
     async fetchCustomExpireTwoArgs(filename, fetchFunction, arg1, arg2, maxAge) {
         let cachedDate = 0;
         try{
-             cachedDate = await getFileUpdatedDate(`./vrmlCache/${filename}.json`);
+             cachedDate = await getFileUpdatedDate(`./cache/${filename}.json`);
         } catch (e) {
             if(e.errno != -4058) {
                 console.error(e)
@@ -145,7 +145,7 @@ module.exports = {
         }
         let cacheAge = new Date() - cachedDate;
         let msg = `Cache is recent, no need to recache (Cache age (seconds): ${cacheAge/1000})`;
-        let target = `./vrmlCache/${filename}.json`;
+        let target = `./cache/${filename}.json`;
         if(cacheAge > maxAge) {
             let data = await fetchFunction(arg1, arg2);
             if(data == undefined) return "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
