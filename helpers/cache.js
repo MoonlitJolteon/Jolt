@@ -8,7 +8,13 @@ const getDirFromPath = (dir) => {
     return dir
 }
 const getFileUpdatedDate = (path) => {
-    const stats = fs.statSync(path)
+    let stats = null;
+    try {
+      stats = fs.statSync(path)
+    } catch(e) {
+      return 0;
+    }
+    if(!stats) return 0;
     return stats.mtime
 }
 module.exports = {

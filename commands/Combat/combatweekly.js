@@ -48,8 +48,8 @@ module.exports = class extends Command {
         
         embed.setTitle(`Combat Stats for \`${name}\``).setColor("#0000FF").setDescription("Powered by [ECRanked](https://www.ecranked.com/), more detailed stats can be found there.")
         let playerData = await combat.getPlayerCache(name)
-        let playerStats = playerData.stats;
-        let loadout = combat.getLoadout(playerStats.top_loadout[0][0]);
+        let playerStats = playerData.weekly_stats;
+        let loadout = combat.getLoadout(playerStats.top_loadout[0][0])
         embed.addField(
             "Total Games",
             playerStats.total_games,

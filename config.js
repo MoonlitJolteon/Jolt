@@ -30,7 +30,7 @@ exports.config = {
     readyMessage: (client) => {
         let msg = `Successfully initialized. Ready to serve ${client.guilds.cache.size} guild${client.guilds.cache.size === 1 ? '' : 's'}.`
         client.guilds.cache.get('757624148800569506').channels.cache.get('879397449012244480').send(msg);
-        client.user.setPresence({ activity: {type: 'COMPETING', name: 'VRML with Nani' }, status: 'online' })
+        client.user.setPresence({ activity: {type: 'COMPETING', name: 'VRML with !help' }, status: 'online' })
         return msg
     },
 

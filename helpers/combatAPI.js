@@ -1,13 +1,12 @@
 const axios = require("axios");
-const cache = require("./cacheECR");
-const { getPlayerCache } = require("./vrmlAPI");
+const cache = require("./cache");
 
-BASE_URL = "https://ecranked.ddns.net/api/v1/"
+COMBAT_URL = "https://ecranked.ddns.net/api/v1/"
 
 async function getPlayer(playerName) {
     let response = await axios({
         method: "GET",
-        url: `${BASE_URL}user/${playerName}`
+        url: `${COMBAT_URL}user/${playerName}`
     });
     return response.data;
 }
@@ -15,7 +14,7 @@ async function getPlayer(playerName) {
 async function getPlayerList() {
     let response = await axios({
         method: "GET",
-        url: `${BASE_URL}user/@all`
+        url: `${COMBAT_URL}user/@all`
     });
     return response.data;
 }

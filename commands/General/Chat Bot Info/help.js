@@ -14,7 +14,7 @@ module.exports = class extends Command {
 	async run(message) {
 		let prefix = message.guild.settings.prefix[0];
 		const embed = new MessageEmbed()
-			.setAuthor("Created by MoonlitJolteon", 'https://cdn.discordapp.com/avatars/237360479624757249/a_a74caf90d6f72ebe7877812d39f53eb7.webp', 'https://vrmasterleague.com/EchoArena/Players/Pq1xQLQziZxndaFTWAA2oA2')
+			.setAuthor("Created by MoonlitJolteon", 'https://cdn.discordapp.com/avatars/237360479624757249/a_a74caf90d6f72ebe7877812d39f53eb7.webp', 'https://ko-fi.com/moonlitjolteon')
 			.setColor("#9E2CB2")
 			.setTitle("What is NaniBot?")
 			.setDescription("NaniBot is a bot for scouting out other teams, created by Nani Reforged")
@@ -53,7 +53,11 @@ module.exports = class extends Command {
 			).addField(
 				`${prefix}compare <team1> | <team2>`,
 				"This will compare a few stats from the two teams that are searched for"
-			);
+			)
+      .addField(
+        "Donations always welcome!",
+        "[Buy me a coffee!](https://ko-fi.com/moonlitjolteon)"
+      );
 		return message.send({embed});
 	}
 

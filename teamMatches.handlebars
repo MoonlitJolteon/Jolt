@@ -13,6 +13,10 @@
     border: 10px;
     border-style: solid;
     border-radius: 10px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
   }
   #team-info {
     background: #ffffff69;
@@ -100,9 +104,9 @@
       <br style="line-height: 0.3em;">
         {{#each matches}}
         {{#if this.searchedTeamWon}}
-        <p class="match-info {{#if forfeit}}forfeit{{else}}win{{/if}}"><b><i>{{this.winningTeam.name}} ({{this.winningTeam.score}})</i></b> Won Vs <b><i>{{this.losingTeam.name}} ({{this.losingTeam.score}})</i></b> on {{this.date}}<br></p>
+        <p class="match-info {{#if forfeit}}forfeit{{else}}win{{/if}}"><b><i>{{this.winningTeam.name}} {{#if forfeit}}{{else}}({{this.winningTeam.score}}){{/if}}</i></b> Won Vs <b><i>{{this.losingTeam.name}} ({{#if forfeit}}forfeit{{else}}{{this.losingTeam.score}}{{/if}})</i></b> on {{this.date}}<br></p>
         {{else}}
-        <p class="match-info {{#if forfeit}}forfeit{{else}}loss{{/if}}"><b><i>{{this.losingTeam.name}} ({{this.losingTeam.score}})</i></b> Lost Vs <b><i>{{this.winningTeam.name}} ({{this.winningTeam.score}})</i></b> on {{this.date}}<br></p>
+        <p class="match-info {{#if forfeit}}forfeit{{else}}loss{{/if}}"><b><i>{{this.losingTeam.name}} ({{#if forfeit}}forfeit{{else}}{{this.losingTeam.score}}{{/if}})</i></b> Lost Vs <b><i>{{this.winningTeam.name}} {{#if forfeit}}{{else}}({{this.winningTeam.score}}){{/if}}</i></b> on {{this.date}}<br></p>
         {{/if}}
         {{/each}}
     </div>
