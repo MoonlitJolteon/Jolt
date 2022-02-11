@@ -119,7 +119,7 @@
   <div>
 
     <img src={{avatarSource}} id="avatar" {{#if
-      country}}{{else}}style="display: block !important; margin-left: auto !important; margin-right: auto !important;"
+      teamExists}}{{else}}style="display: block !important; margin-left: auto !important; margin-right: auto !important;"
       {{/if}}>
     {{#if teamExists}}
     <div id="team-info" class="inline" {{{panel}}}>
@@ -131,7 +131,7 @@
         {{else}}
         Score: {{score.score}}<br>
         {{/if}}
-        W/T/L: {{teamWL}}<br>
+        W/L: {{teamWL}}<br>
         Oculus Username:<br>
         {{username}}
       </h>

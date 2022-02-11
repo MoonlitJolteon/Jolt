@@ -9,9 +9,10 @@ async function getPlayer(playerName) {
   let response = await axios({
     method: "GET",
     url: `${IGNITE_URL}/player_stats/${playerName}?x-api-key=${process.env.IGNITE_TOKEN}`
+  }).catch(e => {
+    return "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚"
   })
-
-  // if(response.data.error) return "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
+  
   return response.data;
 }
 

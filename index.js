@@ -1,7 +1,9 @@
 const { KlasaClient, Schema } = require('klasa');
+const discord = require('discord.js');
 const { config } = require('./config');
 require('dotenv').config();
 const token = process.env.TOKEN;
+const secondary_token = process.env.SECONDARY_TOKEN
 process.env.TZ = 'America/Indiana/Indianapolis' 
 KlasaClient.defaultUserSchema
     .add('floatPoints', 'integer', {default: 0})
@@ -17,8 +19,8 @@ KlasaClient.defaultPermissionLevels
     .add(5, ({ guild, member }) => guild && member.roles.cache.get(naniBotPermsRole) != undefined)
 
 const client = new KlasaClient(config);
+const secondary_client = new discord.Client();
 
+client.secondary = secondary_client;
 require("./server").keepAlive();
 client.login(token);
-
-

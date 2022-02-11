@@ -1,133 +1,129 @@
 const axios = require("axios");
 const cache = require("./cache")
+const { MessageEmbed } = require('discord.js');
 
-BASE_URL = "https://api.vrmasterleague.com"
+const base_url = "https://api.vrmasterleague.com"
 
- async function findPlayer(playerName) {
+async function getSeasons(unusedParam) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/EchoArena/Seasons`
+  });
+  return response.data;
+}
+
+async function findPlayer(playerName) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/EchoArena/Players/Search`,
+    params: {
+      name: playerName
+    }
+  })
+  return response.data;
+}
+
+async function getTeams() {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/EchoArena/Players/`
+  })
+  return response.data;
+}
+
+async function getTeamID(teamName) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/EchoArena/Teams/Search`,
+    params: {
+      name: teamName
+    }
+  })
+  return response.data
+}
+
+async function getTeamInfo(teamID) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/Teams/${teamID}`
+  })
+  return response.data
+}
+
+async function getTeamPlayers(teamID) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/Teams/${teamID}/Players/`
+  })
+  return response.data;
+}
+
+async function getTeamHistoricMatches(teamID) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/Teams/${teamID}/Matches/History`
+  });
+
+  return response.data
+}
+
+async function getTeamUpcomingMatches(teamID) {
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/Teams/${teamID}/Matches/Upcoming`
+  });
+
+  return response.data
+}
+
+async function compareTeams(teamName1, teamName2) {
+  let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
+  let team1 = await cache.fetchCustomExpire(`vrml/Teams/teamIDs/${teamName1.toLowerCase()}`, async (teamName) => {
     let response = await axios({
       method: "GET",
-      url: `${BASE_URL}/EchoArena/Players/Search`,
-      params: {
-        name: playerName
-      }
-    })
-    return response.data;
-  }
-
-  async function getTeams() {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/EchoArena/Players/`
-    })
-    return response.data;
-  }
-
-  async function getTeamID(teamName) {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/EchoArena/Teams/Search`,
+      url: `${base_url}/EchoArena/Teams/Search`,
       params: {
         name: teamName
       }
     })
     return response.data
-  }
-
-  async function getTeamInfo(teamID) {
+  }, teamName1, ONE_DAY * 7);
+  let team2 = await cache.fetchCustomExpire(`vrml/Teams/teamIDs/${teamName2.toLowerCase()}`, async (teamName) => {
     let response = await axios({
       method: "GET",
-      url: `${BASE_URL}/Teams/${teamID}`
+      url: `${base_url}/EchoArena/Teams/Search`,
+      params: {
+        name: teamName
+      }
     })
     return response.data
-  }
-
-  async function getTeamPlayers(teamID) {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/Teams/${teamID}/Players/`
-    })
-    return response.data;
-  }
-
-  async function getTeamHistoricMatches(teamID) {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/Teams/${teamID}/Matches/History`
-    });
-
-    return response.data
-  }
-
-  async function getTeamUpcomingMatches(teamID) {
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/Teams/${teamID}/Matches/Upcoming`
-    });
-
-    return response.data
-  }
-
-  async function compareTeams(teamName1, teamName2) {
-    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
-    let team1 = await cache.fetchCustomExpire(`vrml/Teams/teamIDs/${teamName1.toLowerCase()}`, async (teamName) => {
-      let response = await axios({
-        method: "GET",
-        url: `${BASE_URL}/EchoArena/Teams/Search`,
-        params: {
-          name: teamName
-        }
-      })
-      return response.data
-    }, teamName1, ONE_DAY * 7);
-    let team2 = await cache.fetchCustomExpire(`vrml/Teams/teamIDs/${teamName2.toLowerCase()}`, async (teamName) => {
-      let response = await axios({
-        method: "GET",
-        url: `${BASE_URL}/EchoArena/Teams/Search`,
-        params: {
-          name: teamName
-        }
-      })
-      return response.data
-    }, teamName2, ONE_DAY * 7);
-
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/Teams/${team1[0].id}/${team2[0].id}/`
-    })
-
-    return response.data;
-  }
-
-  async function getPlayer(playerName) {
-    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
-
-    let player = await cache.fetchCustomExpire(`vrml/playerData/${playerName}`, async (playerName) => {
-      let response = await axios({
-        method: "GET",
-        url: `${BASE_URL}/EchoArena/Players/Search`,
-        params: {
-          name: playerName
-        }
-      }).catch(e => {
-        console.error(e)
-        return { data: null }
-      })
-      return response.data;
-    }, playerName, ONE_DAY * 7);
-    if (player[0] == undefined) return;
-
-    let response = await axios({
-      method: "GET",
-      url: `${BASE_URL}/Players/${player[0].id}`
-    })
-    return response.data;
-  }
+  }, teamName2, ONE_DAY * 7);
+  return
+  let response = await axios({
+    method: "GET",
+    url: `${base_url}/Teams/${team1[0].teamID}/${team2[0].teamID}/`
+  })
+  return response.data;
+}
 
 module.exports = {
+
+  async getCurrentSeasonCache() {
+    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
+    let seasons = await cache.fetchCustomExpire(`vrml/seasons`, getSeasons, 'notNeeded', ONE_DAY * 30);
+    return seasons[seasons.length - 1];
+  },
+
+  async searchTeamNameCache(teamName) {
+    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
+    let data = await cache.fetchCustomExpire(`vrml/Teams/teamSearches/${teamName.toLowerCase()}`, getTeamID, teamName, ONE_DAY * 7);
+    return data;
+  },
+
   async getTeamInfoCache(teamName) {
     let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
 
-    let data = await cache.fetchCustomExpire(`vrml/Teams/teamIDs/${teamName.toLowerCase()}`, getTeamID, teamName, ONE_DAY * 7);
+    let data = await cache.fetchCustomExpire(`vrml/Teams/teamSearches/${teamName.toLowerCase()}`, getTeamID, teamName, ONE_DAY * 7);
 
     if (data[0] == undefined) return "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
     data = await cache.fetch(`vrml/Teams/${data[0].id}/Info`, getTeamInfo, data[0].id)
@@ -141,19 +137,12 @@ module.exports = {
   },
 
   async compareTeamsCache(teamName1, teamName2) {
-    let data = await cache.fetchTwoArgs(`vrml/Comparisons/${teamName1.toLowerCase()}-${teamName2.toLowerCase()}`, this.compareTeams, teamName1, teamName2);
+    let data = await cache.fetchTwoArgs(`vrml/Comparisons/${teamName1.toLowerCase()}-${teamName2.toLowerCase()}`, compareTeams, teamName1, teamName2);
     return data;
   },
 
   async getTeamPlayersCache(teamID) {
     let data = await cache.fetch(`vrml/Teams/${teamID}/Players`, getTeamPlayers, teamID);
-    return data;
-  },
-
-  async getPlayerCache(playerName) {
-    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
-    let data = await cache.fetchCustomExpire(`vrml/detailedPlayerData/${playerName}`, getPlayer, playerName, ONE_DAY);
-    if (data.id == undefined) data = "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
     return data;
   },
 
@@ -166,11 +155,11 @@ module.exports = {
   },
 
   async getPlayerIDCache(playerName) {
-    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */);
+    let ONE_DAY = (24 * (60 * (60 * (60 * 1000 /* 1 Second */) /* 1 Minute */) /* 1 hour */) /* 1 Day */)
     let data = await cache.fetchCustomExpire(`vrml/playerData/${playername}`, findPlayer, playerName, ONE_DAY * 7);
     return data[0].id;
   },
-
+  
   async getTeamsCache() {
     let data = await cache.fetch("vrml/teams", getTeams)
     return data
@@ -179,12 +168,9 @@ module.exports = {
   async getPlayerTeamCache(playerName) {
     let data = await cache.fetch("vrml/teams", getTeams)
     let teamName = "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
-    data.forEach(team => {
-      team.players.forEach(player => {
-        if (player.name == playerName) {
-          teamName = team.name;
-        }
-      })
+    data.players.forEach(player => {
+      console.log(player.playerName);
+      if(player.playerName == playerName) return player.teamNameFull;
     })
     return teamName;
   },

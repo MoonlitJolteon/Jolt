@@ -52,37 +52,42 @@ module.exports = class extends Command {
     let name = oculusUsername ? oculusUsername : message.author.settings.oculusName ? message.author.settings.oculusName : invalid;
     let prefix = message.guild.settings.prefix[0]
     let embed = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Please set your oculus name first using \`${prefix}oculusname set <name>\`, or search for another user using \`${prefix}stats <name>\``);
-
     if (name == invalid) return msg.edit({ embed });
+
     let data = await ignite.getPlayerCache(name);
+    embed = embed.setDescription("I was unable to find your stats, please make sure you spelled your oculus username correctly, caps matter. Also note that this feature is powered by Ignite stats, and if you haven't been spectated by `www.ignitevr.gg` before than it won't know you exist");
+    if(data == invalid) return message.send({embed});
+
     let avatarURL;
 
     let teamName = invalid;
-    embed = embed.setDescription("I was unable to find your stats, please make sure you spelled your oculus username correctly, caps matter.")
-    if (data == invalid || data.vrml_player.player_logo == undefined) {
+    
+    if (data == invalid || data.vrml_player == undefined) {
       avatarURL = "http://www.readyatdawn.com/wp-content/uploads/2017/07/GAMES_echoarena_render_character_06.jpg";
     } else {
       avatarURL = data.vrml_player.player_logo
     };
     await msg.edit(`Searching for ${name ? `${name}'s` : "your"} stats...`);
-    teamName = data.vrml_player.team_name;
+    teamName = data == invalid ? invalid : data.vrml_player.team_name;
 
     let teamExists = teamName != invalid && teamName != undefined;
-    let teamInfo = await vrml.getTeamInfoIDCache(data.vrml_player.team_id)
-    let teamLogoURL = data.vrml_player.team_logo;
-    let divisionURL = teamInfo.divisionLogo;
-    let division = teamInfo.division;
-    let teamWL = `${teamInfo.w}-${teamInfo.t}-${teamInfo.l}`;
+    let teamInfo = teamExists ? await vrml.getTeamInfoIDCache(data.vrml_player.team_id) : undefined;
+    if(teamInfo) teamInfo = teamInfo.team;
+    let teamLogoURL = teamExists ? data.vrml_player.team_logo : undefined;
+    let divisionURL = teamExists ? teamInfo.divisionLogo : undefined;
+    let division = teamExists ? teamInfo.divisionName : undefined;
+    let teamWL = teamExists ? `${teamInfo.w}-${teamInfo.l}` : undefined;
 
     await fs.readFile('./statsLayout.handlebars').then((data) => {
       html = data.toString();
     })
 
     let backgroundColors = teamExists ? divColors.divisionBasedColor(division) : divColors.default;
+    // let backgroundColors = divColors.default;
     let panel = backgroundColors.panel;
     let background = backgroundColors.background;
     let switchDivision = backgroundColors.switchDivision;
-    let country = data.vrml_player.country != "none" ? data.vrml_player.country.toLowerCase() : undefined;
+    let country = teamExists ? data.vrml_player.country != "none" ? data.vrml_player.country.toLowerCase() : undefined : undefined;
 
 
     let score;
@@ -109,7 +114,7 @@ module.exports = class extends Command {
       logoSource: teamLogoURL,
       teamName,
       score,
-      teamWL: teamWL,
+      teamWL,
       username: name,
       division: divisionURL,
       panel,
@@ -126,12 +131,17 @@ module.exports = class extends Command {
       content,
       puppeteerArgs: { args: ["--no-sandbox"] }
     })
-
-    let attach = new MessageAttachment(image);
-    msg.delete();
+    
+    let attach = new MessageAttachment(image, 'stats.png');
     let supporters = require("../../supporters.json");
-    let supporterThanks = supporters[name.toLowerCase()];
-    message.send(supporterThanks, { files: [attach] });;
+    embed = new MessageEmbed()
+        .setTitle(`Stats for ${name}:`)
+        .attachFiles(attach)
+        .setImage(`attachment://stats.png`);
+      if (supporters[name.toLowerCase()]) embed.setDescription(supporters[name.toLowerCase()]);
+      else embed.setDescription("Those who donate get a custom quote here! [Click here to donate, and make sure to give your username and quote!](https://ko-fi.com/moonlitjolteon)");
+    msg.delete();
+    message.channel.send({embed});
 
   }
 

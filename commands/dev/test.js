@@ -1,6 +1,6 @@
 
 const { MessageEmbed, Message } = require('discord.js');
-const { Command } = require('klasa');
+const { RichMenu, Command } = require('klasa');
 
 module.exports = class extends Command {
 
@@ -26,20 +26,59 @@ module.exports = class extends Command {
       permissionLevel: 10,
       description: '',
       extendedHelp: 'No extended help available.',
-      usage: '<player:string>',
+      usage: '',
       usageDelim: undefined,
       quotedStringSupport: false,
       subcommands: false
     });
+    this.menu = null;
   }
 
   async run(message, [player, ...params]) {
-    const ignite = require('../../helpers/igniteAPI')
-    let data = await ignite.getPlayerCache(player);
-    console.log(data)
+    const collector = await this.menu.run(await message.send("Loading teams..."));
+    const choice = await collector.selection;
+
+    if (choice === null) {
+      return collector.message.delete();
+    }
+
+    // console.log(choice);
   }
 
   async init() {
+    let options = [
+      {
+        name: "Name",
+        id: "id"
+      },
+      {
+        name: "Name1",
+        id: "id1"
+      },
+      {
+        name: "Name2",
+        id: "id2"
+      },
+      {
+        name: "Name3",
+        id: "id3"
+      },
+      {
+        name: "Name4",
+        id: "id4"
+      }
+    ]
+
+    this.menu = new RichMenu(new MessageEmbed()
+      .setColor(0x673AB7)
+      .setAuthor(this.client.user.username, this.client.user.displayAvatarURL())
+      // .setTitle('Advanced Commands Help:')
+      // .setDescription('Use the arrow reactions to scroll between pages.\nUse number reactions to select an option.')
+    );
+
+    for (const option of options) {
+      this.menu.addOption(option.name, option.id);
+    }
   }
 
 };

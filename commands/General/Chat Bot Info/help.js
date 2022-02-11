@@ -16,15 +16,18 @@ module.exports = class extends Command {
 		const embed = new MessageEmbed()
 			.setAuthor("Created by MoonlitJolteon", 'https://cdn.discordapp.com/avatars/237360479624757249/a_a74caf90d6f72ebe7877812d39f53eb7.webp', 'https://ko-fi.com/moonlitjolteon')
 			.setColor("#9E2CB2")
-			.setTitle("What is NaniBot?")
-			.setDescription("NaniBot is a bot for scouting out other teams, created by Nani Reforged")
+			.setTitle("What is Jolt?")
+			.setDescription("Jolt is a bot for scouting out other teams, created by Moonlit with the help of Nani Reforged's insight")
 			.addField(
-				"Why create NaniBot instead of using Ignite stats?",
+				"Why create Jolt instead of using Ignite stats?",
 				"While Ignite stats are useful for scouting out individual players, it has little to no functionality when it comes to scouting out teams."
 			).addField(
-				"How do I use NaniBot?",
-				"NaniBot has various commands for scouting out teams, most if not all are listed below.\nArguments are shown like this: <required> [optional]"
+				"How do I use Jolt?",
+				"Jolt has various commands for scouting out teams, most if not all are listed below.\nArguments are shown like this: <required> [optional]"
 			).addField(
+        "Do you like Jolt?", 
+        "This is a public bot! You can invite it to your own server with this link https://dsc.gg/jolt-vrml"
+      ).addField(
 				`${prefix}oculusname set <name>`,
 				"This will save your oculus username to the bot's storage, allowing you to use stat commands without giving your username."
 			).addField(
@@ -45,15 +48,19 @@ module.exports = class extends Command {
 				`${prefix}teamstats [teamname]`,
 				"This will get the stats and the last 6 matches of your team or the team you search for."
 			).addField(
+        `${prefix}groupstats [teamname]`,
+        "This will get the stats for each player on your team or the team you search for."
+      ).addField(
 				`${prefix}upcoming [teamname]`,
 				"This will get the upcoming matches for your team or the team you searched for, as well as display the date it's scheduled for."
 			).addField(
 				`${prefix}teamplayers [teamname]`,
 				"This will display some team information as well as list the players for your team or the team you search for"
-			).addField(
-				`${prefix}compare <team1> | <team2>`,
-				"This will compare a few stats from the two teams that are searched for"
 			)
+      // .addField(
+			// 	`${prefix}compare <team1> | <team2>`,
+			// 	"This will compare a few stats from the two teams that are searched for"
+			// )
       .addField(
         "Donations always welcome!",
         "[Buy me a coffee!](https://ko-fi.com/moonlitjolteon)"

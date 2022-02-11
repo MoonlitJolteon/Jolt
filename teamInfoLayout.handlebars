@@ -76,12 +76,12 @@
         &nbsp;&nbsp;Overall Score: {{score}}<br>
         &nbsp;&nbsp;Change This Cycle: {{cycleScorePM}}<br>
         {{/if}}
-        &nbsp;&nbsp;W/T/L: {{teamWL}}<br>
+        &nbsp;&nbsp;W/L: {{teamWL}}<br>
         &nbsp;&nbsp;Division: {{division}}<br>
         <!-- &nbsp;&nbsp;Currently Recruiting: {{recruiting}}<br> -->
         {{#each players}}
-        <img src=https://www.vrmasterleague.com{{this.logo}} class="player-icon">
-        &nbsp;&nbsp;{{this.name}} - {{this.role}}<br>
+        <img src=https://www.vrmasterleague.com{{this.userLogo}} class="player-icon">
+        &nbsp;&nbsp;{{this.playerName}} - {{this.role}}<br>
         {{/each}}
         </h>
 

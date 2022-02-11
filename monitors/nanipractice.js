@@ -26,11 +26,11 @@ module.exports = class extends Monitor {
         let todaySched;
         switch(todayNum) {
             case 1:
-                todaySched = "Today we have scheduled practice at 9pm Eastern Timezone";
+                todaySched = "Today we have scheduled practice at 8:30pm Eastern Timezone";
                 break;
             case 2:
             case 4:
-                todaySched = "Today we have scheduled practice at 8pm Eastern Timezone";
+                todaySched = "Today we have scheduled practice at 8:30pm Eastern Timezone";
                 break;
             default:
                 todaySched = "We have no scheduled practice today, but you can practice on your own."
@@ -38,10 +38,10 @@ module.exports = class extends Monitor {
 
         let embed = new MessageEmbed()
             .addField("**Do we have practice today?**", todaySched)
-            .addField("Nani's Normal Practice Schedule (Eastern Time)", `Every Monday at 9pm\nEvery Tuesday at 8pm\nEvery Thursday at 8pm`)
+            .addField("Nani's Normal Practice Schedule (Eastern Time)", `Every Monday at 8:30pm\nEvery Tuesday at 8:30pm\nEvery Thursday at 8:30pm`)
             .setColor('#9a009a');
 
-        if(message.content.includes('practice') && message.content.includes('when')) {
+        if(message.content.toLowerCase().includes('practice') && message.content.toLowerCase().includes('when')) {
             message.send({embed})
         }
     }
