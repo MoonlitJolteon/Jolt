@@ -21,7 +21,7 @@ module.exports = class extends Command {
       runIn: ['text', 'dm', 'group'],
       requiredPermissions: [],
       requiredSettings: [],
-      aliases: [],
+      aliases: ['team'],
       autoAliases: true,
       bucket: 1,
       cooldown: 0,
@@ -202,7 +202,7 @@ module.exports = class extends Command {
     let supporters = require("../../supporters.json");
     embed = new MessageEmbed()
         .setTitle(`${teamInfo.teamName}'s stats:`)
-        .setDescription(`This only shows the most recent 6 games.\n${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID}`)
+        .setDescription(`This only shows the most recent 6 games.\n${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
         .attachFiles(attach)
         .setImage(`attachment://teamstats.png`);
     msg.delete();

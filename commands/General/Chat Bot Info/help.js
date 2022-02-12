@@ -14,7 +14,7 @@ module.exports = class extends Command {
 	async run(message) {
 		let prefix = message.guild.settings.prefix[0];
 		const embed = new MessageEmbed()
-			.setAuthor("Created by MoonlitJolteon", 'https://cdn.discordapp.com/avatars/237360479624757249/a_a74caf90d6f72ebe7877812d39f53eb7.webp', 'https://ko-fi.com/moonlitjolteon')
+			.setAuthor("Created by MoonlitJolteon", 'https://cdn.discordapp.com/icons/757624148800569506/a_1a0bee00615783ef293ca179af37434c.webp', 'https://ko-fi.com/moonlitjolteon')
 			.setColor("#9E2CB2")
 			.setTitle("What is Jolt?")
 			.setDescription("Jolt is a bot for scouting out other teams, created by Moonlit with the help of Nani Reforged's insight")
@@ -27,6 +27,12 @@ module.exports = class extends Command {
 			).addField(
         "Do you like Jolt?", 
         "This is a public bot! You can invite it to your own server with this link https://dsc.gg/jolt-vrml"
+      ).addField(
+        `${prefix}timezone set <timezone>`,
+        "This is used to set the server's timezone. This is useful for the upcoming command if you're in a timezone other than Eastern Time"
+      ).addField(
+        `${prefix}timezone clear`,
+        "This is used to reset the server's timezone back to America/New_York. (Eastern Time)"
       ).addField(
 				`${prefix}oculusname set <name>`,
 				"This will save your oculus username to the bot's storage, allowing you to use stat commands without giving your username."

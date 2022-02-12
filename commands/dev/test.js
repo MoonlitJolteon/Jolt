@@ -1,6 +1,13 @@
 
 const { MessageEmbed, Message } = require('discord.js');
 const { RichMenu, Command } = require('klasa');
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/New_York")
+const timezones = require('../../resources/timezones.json');
 
 module.exports = class extends Command {
 
@@ -26,7 +33,7 @@ module.exports = class extends Command {
       permissionLevel: 10,
       description: '',
       extendedHelp: 'No extended help available.',
-      usage: '',
+      usage: '<timezone:string>',
       usageDelim: undefined,
       quotedStringSupport: false,
       subcommands: false
@@ -34,51 +41,8 @@ module.exports = class extends Command {
     this.menu = null;
   }
 
-  async run(message, [player, ...params]) {
-    const collector = await this.menu.run(await message.send("Loading teams..."));
-    const choice = await collector.selection;
-
-    if (choice === null) {
-      return collector.message.delete();
-    }
-
-    // console.log(choice);
+  async run(message, [timezone, ...params]) {
   }
 
-  async init() {
-    let options = [
-      {
-        name: "Name",
-        id: "id"
-      },
-      {
-        name: "Name1",
-        id: "id1"
-      },
-      {
-        name: "Name2",
-        id: "id2"
-      },
-      {
-        name: "Name3",
-        id: "id3"
-      },
-      {
-        name: "Name4",
-        id: "id4"
-      }
-    ]
-
-    this.menu = new RichMenu(new MessageEmbed()
-      .setColor(0x673AB7)
-      .setAuthor(this.client.user.username, this.client.user.displayAvatarURL())
-      // .setTitle('Advanced Commands Help:')
-      // .setDescription('Use the arrow reactions to scroll between pages.\nUse number reactions to select an option.')
-    );
-
-    for (const option of options) {
-      this.menu.addOption(option.name, option.id);
-    }
-  }
-
+  async init() { }
 };

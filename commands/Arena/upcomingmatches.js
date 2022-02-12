@@ -6,6 +6,14 @@ const vrml = require("../../helpers/vrmlAPI");
 const divColors = require("../../helpers/divisionBasedColor");
 const numsToDate = require("../../helpers/numsToDateStuff");
 const ignite = require('../../helpers/igniteAPI');
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+const advancedFormat = require('dayjs/plugin/advancedFormat');
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(advancedFormat)
+dayjs.tz.setDefault("America/New_York")
 
 const invalid = "Invalid🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚🥚";
 module.exports = class extends Command {
@@ -131,9 +139,10 @@ module.exports = class extends Command {
         awayTeam: match.awayTeam.teamName
       }
       let datetime = new Date(`${match.dateScheduledUTC} GMT+0000`);
-      let date = `${numsToDate.numToDay(datetime.getDay())} ${numsToDate.numToMonth(datetime.getMonth(), true)} ${datetime.getDate()}`;
-      let time24 = datetime.toTimeString().split(' ')[0].split(':').splice(0, 2).join(':');
-      let time = `${time24.split(':')[0] > 12 ? time24.split(':')[0] - 12 : time24.split(':')[0]}:${time24.split(':')[1]}${time24.split(':')[0] > 12 ? "PM" : "AM"}`;
+      const timezone = message.guild.settings.timezone;
+      let date = dayjs(datetime).tz(timezone).format("dddd D [@] h:mmA z");
+
+
       let generated = new Date();
       generated.setDate(generated.getDate() - (generated.getDay() + 6) % 7);
       generated.setHours(9, 0, 0, 0);
@@ -146,7 +155,7 @@ module.exports = class extends Command {
         scheduledText: scheduled ? "scheduled" : "not-scheduled",
         match,
         date,
-        time,
+        time: undefined,
         pastTime
       }
       matches.push(newMatch);
@@ -175,7 +184,7 @@ module.exports = class extends Command {
     let supporters = require("../../supporters.json");
     embed = new MessageEmbed()
       .setTitle(`${teamInfo.teamName}'s upcoming matches:`)
-      .setDescription(`Matches that are red haven't been scheduled yet\nMatches that are green have been scheduled\nMatches that are orange have been scheduled and have passed (for example, scores haven't been submitted yet)`)
+      .setDescription(`If this server works out of a different timezone than displayed, the server admins can run \`${prefix}timezone set <timezone abbrevation>\` to change what timezone this is based on.\nIf there are casted matches, the links will be available here.`)
       .attachFiles(attach)
       .setImage(`attachment://upcomingmatches.png`);
 
