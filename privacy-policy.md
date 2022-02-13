@@ -1,6 +1,6 @@
 ## **What information is stored?**
 
-Only message content is stored.
+Only oculus usernames and timezones are stored, and only when specifically given by the user to do so.
 
 ## Why it is stored?
 We store only _**message content**_ for the `!oculusname` and `!timezone` commands, which is used to save your oculus username and a server's main timezone.
