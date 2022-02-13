@@ -14,4 +14,4 @@ Content Here.
 
 ---
 
-*Make sure to read  too.* 
+*Make sure to read [Privacy-Policy](https://moonlitjolteon.github.io/Jolt/privacy-policy) too.* 
