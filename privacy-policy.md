@@ -1,5 +1,3 @@
----
-
 ## **What information is stored?**
 
 Only message content is stored.
