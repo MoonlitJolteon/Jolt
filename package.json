@@ -1,37 +1,28 @@
 {
+  "devDependencies": {
+    "@types/node": "^17.0.13",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  },
   "name": "nanibot",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "dependencies": {
-    "axios": "^0.21.4",
-    "cheerio": "^1.0.0-rc.10",
-    "dayjs": "^1.10.7",
-    "dice-typescript": "^1.6.1",
-    "diff": "^4.0.1",
-    "discord.js": "^12.0.0-dev",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "express-handlebars": "^5.3.3",
-    "gamblers-dice": "^1.0.1",
-    "hookcord": "^2.0.2",
-    "klasa": "^0.5.0-dev",
-    "node-fs": "^0.1.7",
-    "node-html-to-image": "^3.2.0",
-    "node-opus": "^0.3.3",
-    "puppeteer": "^3.0.4",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.6",
-    "request-promise-native": "^1.0.7",
-    "translate": "^1.1.0"
-  },
+  "description": "A scouting bot for VRML teams in Echo Arena",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "build": "@powershell rm -r ./dist/res/ && @powershell copy -R ./src/res ./dist/ && npx tsc",
+    "start": "node dist/index.js"
   },
   "author": "",
   "license": "ISC",
-  "engines": {
-    "node": "16.9.1"
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^0.25.0",
+    "canvas": "^2.9.0",
+    "discord-slasho": "^1.1.2",
+    "discord.js": "^13.6.0",
+    "dotenv": "^14.3.2",
+    "enmap": "^5.8.7",
+    "node-html-to-image": "^3.2.0",
+    "puppeteer": "^13.1.3"
   }
 }
