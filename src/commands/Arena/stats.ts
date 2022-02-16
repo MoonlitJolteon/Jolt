@@ -55,10 +55,10 @@ module.exports = {
 
         const teamName = vrml_player?.team_name;
         const teamExists = vrml_player.team_name != undefined;
-        const teamInfo = teamExists ? await vrml.getTeamInfoIDCache(vrml_player.team_id) : undefined;
+        const teamInfo = teamExists ? await vrml.getTeamInfoCache(vrml_player.team_id) : undefined;
         const teamLogoURL = teamExists ? vrml_player.team_logo : undefined;
         const divisionURL = teamExists ? teamInfo!.divisionLogo : undefined;
-        const division = teamExists ? teamInfo!.division : undefined;
+        const division = teamExists ? teamInfo!.divisionName : undefined;
         const teamWL = teamExists ? `${teamInfo.w}-${teamInfo.l}` : undefined;
 
         const backgroundColors = teamExists ? divColor.divisionBasedColor(division) : divColor.defaultColorScheme;
@@ -68,8 +68,8 @@ module.exports = {
         const country = teamExists ? vrml_player.country.toLowerCase() : undefined;
 
         let score;
-        if(teamExists) {
-            if(switchDivision == "Master") {
+        if (teamExists) {
+            if (switchDivision == "Master") {
                 score = {
                     mmr: false,
                     score: teamInfo.pts
@@ -97,19 +97,27 @@ module.exports = {
             background,
             playerStats,
             playerStatsError: undefined,
-            win_rate: `${round((playerStats.total_wins / playerStats.game_count)*100, 2)}%`,
+            win_rate: `${round((playerStats.total_wins / playerStats.game_count) * 100, 2)}%`,
             save_rate: round(playerStats.total_saves / playerStats.game_count, 2)
         }
 
         let image = await nodeHtmlToImage({
             html,
-            content,
-            puppeteerArgs: { args: ['--no-sandbox'] }
+            content
         }) as Buffer;
 
-        const attachment = new MessageAttachment(image, 'output.png');
+
+
+
+        let attach = new MessageAttachment(image, 'stats.png');
         const supporterThanks = (supporters as any)[userToFind.toLowerCase()];
-        interaction.editReply({content: supporterThanks, files: [attachment] });
+        const embed = new MessageEmbed()
+            .setTitle(`Stats for ${igniteData.player[0].player_name}:`)
+            .setImage(`attachment://stats.png`)
+            .setFooter({text: "Created by MoonlitJolteon, Bot available here: https://dcs.gg/jolt-vrml"});
+        if (supporterThanks) embed.setDescription(supporterThanks);
+        else embed.setDescription("Those who donate get a custom quote here! [Click here to donate, and make sure to give your username and quote!](https://ko-fi.com/moonlitjolteon)");
+        interaction.editReply({ embeds: [embed], files: [attach] });
 
     }
 } 

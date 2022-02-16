@@ -20,5 +20,5 @@ export const bot = new customApp( {
 }, {});
 
 bot.launch().then(() => {
-    bot.dev();
+    // bot.dev();
 });
