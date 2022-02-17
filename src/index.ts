@@ -19,6 +19,9 @@ export const bot = new customApp( {
     commandsDir: __dirname.replace("\\", "/") + "/commands"
 }, {});
 
+
 bot.launch().then(() => {
     // bot.dev();
+    // bot.production();
+    bot.client.user!.setPresence({ activities: [{type: 'COMPETING', name: 'VRML with /help' }], status: 'online' })
 });

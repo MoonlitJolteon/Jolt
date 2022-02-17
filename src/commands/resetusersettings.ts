@@ -4,7 +4,7 @@ import { bot } from '../index';
 module.exports = {
     //Command metadata
     type: "slash",
-    name: "resetsettings",
+    name: "resetusersettings",
     description: "Clear your personal settings from the bot's memory.",
     options: [
     ],

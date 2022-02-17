@@ -37,7 +37,7 @@ module.exports = {
         let teamID;
         if (teamToFind == undefined) {
             let userToFind = await bot.oculusNames.get(interaction!.member!.user.id);
-            if (teamToFind == undefined) return interaction.editReply({ embeds: [errorNoUser] });
+            if (userToFind == undefined) return interaction.editReply({ embeds: [errorNoUser] });
             let igniteData = await ignite.getPlayerCache(userToFind);
             interaction.editReply("Searching for your team...");
             teamToFind = igniteData?.vrml_player?.team_name;
@@ -47,9 +47,11 @@ module.exports = {
             interaction.editReply(`Searching for ${teamToFind}...`);
         }
         if (teamToFind == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
-        let teams;
-        if (teamID == undefined) teams = await vrml.searchTeamNameCache(teamToFind);
-        teamID = teams[0].id;
+        if (teamID == undefined) {
+            let teams;
+            teams = await vrml.searchTeamNameCache(teamToFind);
+            teamID = teams[0].id;
+        }
         const teamInfo = await vrml.getTeamInfoCache(teamID);
         if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
         const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
