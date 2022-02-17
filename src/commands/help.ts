@@ -9,6 +9,7 @@ module.exports = {
 
     //Main execution function, this is where you should put command logic
     async execute({ interaction }: { interaction: CommandInteraction }) {
+        await interaction.deferReply();
         let prefix = "/";
         const embed = new MessageEmbed()
             .setAuthor({name: "Created by MoonlitJolteon", iconURL: 'https://cdn.discordapp.com/icons/757624148800569506/a_1a0bee00615783ef293ca179af37434c.webp', url: 'https://ko-fi.com/moonlitjolteon'})
@@ -60,7 +61,7 @@ module.exports = {
                 "Donations always welcome!",
                 "[Buy me a coffee!](https://ko-fi.com/moonlitjolteon)"
             );
-        await interaction.deferReply(); interaction.editReply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
 
     }
 } 

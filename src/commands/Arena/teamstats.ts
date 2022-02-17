@@ -85,7 +85,7 @@ module.exports = {
         const lastSixMatches = historicMatches.splice(0, 6);
 
         let html = '<p>Something broke.. contact MunelitJolty#0447 if you see this message and tell her what you did to get it</p>';
-        await fs.readFile(__dirname.replace("\\", "/") + '../../../res/layouts/teamstats.handlebars').then((data) => {
+        await fs.readFile(__dirname.replace("\\", "/") + '/../../../res/layouts/teamstats.handlebars').then((data) => {
             html = data.toString();
         })
 
