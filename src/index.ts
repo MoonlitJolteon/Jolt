@@ -16,7 +16,7 @@ export const bot = new customApp( {
     token: process.env.TOKEN!,
     devGuild: process.env.DEV_ID || '',
     intents: ["GUILDS"],
-    commandsDir: __dirname + "\\commands"
+    commandsDir: __dirname.replace("\\", "/") + "/commands"
 }, {});
 
 bot.launch().then(() => {

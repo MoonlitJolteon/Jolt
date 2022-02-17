@@ -44,7 +44,7 @@ module.exports = {
         if (igniteData == undefined) return interaction.editReply({ embeds: [errorNoStats] });
 
         let html = '<p>Something broke.. contact MunelitJolty#0447 if you see this message and tell her what you did to get it</p>';
-        await fs.readFile(__dirname + '..\\..\\..\\res\\layouts\\stats.handlebars').then(data => {
+        await fs.readFile(__dirname.replace("\\", "/") + '../../../res/layouts/stats.handlebars').then(data => {
             html = data.toString();
         });
 
