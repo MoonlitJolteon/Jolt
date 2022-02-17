@@ -2,95 +2,91 @@ import { CommandInteraction, MessageAttachment, MessageEmbed } from "discord.js"
 import nodeHtmlToImage from "node-html-to-image";
 import * as fs from 'fs/promises';
 import dayjs from 'dayjs';
+import fuzzysort from "fuzzysort";
 
 import { bot } from '../../index';
 import * as ignite from '../../helpers/igniteAPI';
 import * as vrml from '../../helpers/vrmlAPI';
 import * as divColor from '../../helpers/divisionBasedColors';
-import { LaunchOptions } from "puppeteer";
 
 let errorNoUser = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Please set your oculus name first using \`/oculusname\`, or search for another user by specifying a user.`);
 let errorNoTeam = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("I was unable to find the team, please make sure you spelled the team name correctly. Do note that if the team is retired, or has never gone active, I won't be able to find your team.");
 
-
-function round(num: number, places: number) {
-    var multiplier = Math.pow(10, places);
-    return Math.round(num * multiplier) / multiplier;
-}
-
 module.exports = {
-    //Command metadata
-    type: "slash",
-    name: "teamstats",
-    description: "Get a team's stats",
-    options: [
-        {
-            name: "teamname",
-            description: "VRML team to search for",
-            type: "STRING",
-            required: false
-        }
-    ],
+  //Command metadata
+  type: "slash",
+  name: "teamstats",
+  description: "Get a team's stats",
+  options: [
+    {
+      name: "teamname",
+      description: "VRML team to search for",
+      type: "STRING",
+      required: false
+    }
+  ],
 
-    async execute({ interaction }: { interaction: CommandInteraction }) {
-        await interaction.deferReply();
-        let teamToFind = interaction.options.getString('teamname');
-        let teamID;
-        if (teamToFind == undefined) {
-            let userToFind = await bot.oculusNames.get(interaction!.member!.user.id);
-            if (userToFind == undefined) return interaction.editReply({ embeds: [errorNoUser] });
-            let igniteData = await ignite.getPlayerCache(userToFind);
-            interaction.editReply("Searching for your team...");
-            teamToFind = igniteData?.vrml_player?.team_name;
-            teamID = igniteData?.vrml_player?.team_id
+  async execute({ interaction }: { interaction: CommandInteraction }) {
+    await interaction.deferReply();
+    let teamToFind = interaction.options.getString('teamname');
+    let teamID;
+    if (teamToFind == undefined) {
+      let userToFind = await bot.oculusNames.get(interaction!.member!.user.id);
+      if (userToFind == undefined) return interaction.editReply({ embeds: [errorNoUser] });
+      let igniteData = await ignite.getPlayerCache(userToFind);
+      interaction.editReply("Searching for your team...");
+      teamToFind = igniteData?.vrml_player?.team_name;
+      teamID = igniteData?.vrml_player?.team_id
 
-        } else {
-            interaction.editReply(`Searching for ${teamToFind}...`);
-        }
-        if (teamToFind == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
-        if (teamID == undefined) {
-            let teams;
-            teams = await vrml.searchTeamNameCache(teamToFind);
-            teamID = teams[0].id;
-        }
-        const teamInfo = await vrml.getTeamInfoCache(teamID);
-        if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
-        const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
-        const divisionURL = `https://www.vrmasterleague.com/${teamInfo.divisionLogo}`
-        const division = teamInfo.divisionName;
-        const teamWL = `${teamInfo.w}-${teamInfo.l}`
-        const rank = teamInfo.rank;
-        let region = teamInfo.regionName;
-        const teamName = teamInfo.teamName;
+    } else {
+      interaction.editReply(`Searching for ${teamToFind}...`);
+    }
 
-        switch (region) {
-            case 'America East':
-                region = "NA/E";
-                break;
-            case 'America West':
-                region = "NA/W";
-                break;
-            case 'Europe':
-                region = "EU";
-                break;
-            case 'Oceania/Asia':
-                region = "OA";
-                break;
-        }
+    if (teamToFind == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
+    if (teamID == undefined) {
+      let teams;
+      teams = await vrml.searchTeamNameCache(teamToFind);
+      let teamsSorted = fuzzysort.go(teamToFind, teams, {key: "name"});
+      teamID = teams.filter((team: { name: string; }) => team.name == teamsSorted[0].target)[0].id;
+    }
+    const teamInfo = await vrml.getTeamInfoCache(teamID);
+    if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
+    const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
+    const divisionURL = `https://www.vrmasterleague.com/${teamInfo.divisionLogo}`
+    const division = teamInfo.divisionName;
+    const teamWL = `${teamInfo.w}-${teamInfo.l}`
+    const rank = teamInfo.rank;
+    let region = teamInfo.regionName;
+    const teamName = teamInfo.teamName;
 
-        await interaction.editReply(`Searching for ${teamName}'s matches...`);
-        let historicMatches = await vrml.getTeamMatchesCache(true, teamID);
-        const currSeason = await vrml.getCurrentSeasonCache();
-        historicMatches = historicMatches.filter((match: any) => match.seasonName == currSeason.seasonName);
+    switch (region) {
+      case 'America East':
+        region = "NA/E";
+        break;
+      case 'America West':
+        region = "NA/W";
+        break;
+      case 'Europe':
+        region = "EU";
+        break;
+      case 'Oceania/Asia':
+        region = "OA";
+        break;
+    }
 
-        const lastSixMatches = historicMatches.splice(0, 6);
+    await interaction.editReply(`Searching for ${teamName}'s matches...`);
+    let historicMatches = await vrml.getTeamMatchesCache(true, teamID);
+    const currSeason = await vrml.getCurrentSeasonCache();
+    historicMatches = historicMatches.filter((match: any) => match.seasonName == currSeason.seasonName);
 
-        let html = '<p>Something broke.. contact MunelitJolty#0447 if you see this message and tell her what you did to get it</p>';
-        await fs.readFile(__dirname.replace("\\", "/") + '/../../res/layouts/teamstats.handlebars').then((data) => {
-            html = data.toString();
-        })
+    const lastSixMatches = historicMatches.splice(0, 6);
 
-        
+    let html = '<p>Something broke.. contact MunelitJolty#0447 if you see this message and tell her what you did to get it</p>';
+    await fs.readFile(__dirname.replace("\\", "/") + '/../../res/layouts/teamstats.handlebars').then((data) => {
+      html = data.toString();
+    })
+
+
     let backgroundColors = divColor.divisionBasedColor(division);
     let panel = backgroundColors.panel;
     let background = backgroundColors.background;
@@ -121,7 +117,7 @@ module.exports = {
       let losingTeam = teams[match.losingTeamID];
       let searchedTeamWon = teamInfo.teamID == match.winningTeamID;
       let datetime = new Date(`${match.dateScheduledUTC} GMT+0000`);
-      let date = dayjs(datetime).format("MMM M"); 
+      let date = dayjs(datetime).format("MMM M");
       let forfeit = match.isForfeit;
       let newMatch = {
         winningTeam,
@@ -153,11 +149,11 @@ module.exports = {
 
     let attach = new MessageAttachment(image, 'teamstats.png');
     let embed = new MessageEmbed()
-        .setTitle(`${teamInfo.teamName}'s stats:`)
-        .setDescription(`This only shows the most recent 6 games.\n${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
-        .setImage(`attachment://teamstats.png`);
-    interaction.editReply({embeds: [embed], files: [attach]});
+      .setTitle(`${teamInfo.teamName}'s stats:`)
+      .setDescription(`This only shows the most recent 6 games.\n${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
+      .setImage(`attachment://teamstats.png`);
+    interaction.editReply({ embeds: [embed], files: [attach] });
 
 
-    }
+  }
 }
