@@ -25,7 +25,7 @@ export const bot = new customApp( {
 
 bot.launch().then(async () => {
     // bot.dev();
-    bot.production();
+    // bot.production();
     bot.client.user!.setPresence({ activities: [{type: 'COMPETING', name: 'VRML with /help' }], status: 'online' });
     const devGuild = await bot.client.guilds.fetch('757624148800569506');
     const devChannel = await devGuild.channels.fetch('879397449012244480') as TextChannel;
