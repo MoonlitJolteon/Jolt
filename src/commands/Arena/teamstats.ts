@@ -148,12 +148,6 @@ module.exports = {
         matches,
         rank,
         region
-      },
-      puppeteerArgs: {
-          args: ['--no-sandbox',
-              '--disable-accelerated-2d-canvas',
-              '--no-first-run',
-              '--disable-gpu']
       }
     }) as Buffer;
 

@@ -1,0 +1,13 @@
+diff --git a/node_modules/node-html-to-image/src/index.js b/node_modules/node-html-to-image/src/index.js
+index f7d3d4f..ffc243d 100644
+--- a/node_modules/node-html-to-image/src/index.js
++++ b/node_modules/node-html-to-image/src/index.js
+@@ -9,7 +9,7 @@ module.exports = async function(options) {
+     content,
+     output,
+     selector = 'body',
+-    puppeteerArgs = {},
++    puppeteerArgs = {args: ['--no-sandbox', '--headless', '--disable-gpu']},
+   } = options
+ 
+   if (!html) {

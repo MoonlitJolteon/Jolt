@@ -101,16 +101,10 @@ module.exports = {
             win_rate: `${round((playerStats.total_wins / playerStats.game_count) * 100, 2)}%`,
             save_rate: round(playerStats.total_saves / playerStats.game_count, 2)
         }
-        
+
         let image = await nodeHtmlToImage({
             html,
-            content,
-            puppeteerArgs: {
-                args: ['--no-sandbox',
-                    '--disable-accelerated-2d-canvas',
-                    '--no-first-run',
-                    '--disable-gpu']
-            } as LaunchOptions
+            content
         }) as Buffer;
 
 
