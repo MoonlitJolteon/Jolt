@@ -33,5 +33,9 @@ packages/
 cache/
 node_modules/
 .env
-dist/
+
+dist/*.js
+dist/commands
+dist/helpers
+dist/res/layouts
 data/

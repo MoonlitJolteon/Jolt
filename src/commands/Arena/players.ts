@@ -15,8 +15,8 @@ let errorNoTeam = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDe
 module.exports = {
   //Command metadata
   type: "slash",
-  name: "teamstats",
-  description: "Get a team's stats",
+  name: "players",
+  description: "Get a team's player list",
   options: [
     {
       name: "teamname",
@@ -52,6 +52,8 @@ module.exports = {
       let teamsSorted = fuzzysort.go(teamToFind, teams, { key: "name" });
       teamID = teams.filter((team: { name: string; }) => team.name == teamsSorted[0].target)[0].id;
     }
+
+    
     const teamInfo = await vrml.getTeamInfoCache(teamID);
     if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
     const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
@@ -61,6 +63,7 @@ module.exports = {
     const rank = teamInfo.rank;
     let region = teamInfo.regionName;
     const teamName = teamInfo.teamName;
+    let recruiting = teamInfo.isRecruiting ? "Yes" : "No";
 
     switch (region) {
       case 'America East':
@@ -76,78 +79,55 @@ module.exports = {
         region = "OA";
         break;
     }
-
-    await interaction.editReply(`Searching for ${teamName}'s matches...`);
-    let historicMatches = await vrml.getTeamMatchesCache(true, teamID);
-    const currSeason = await vrml.getCurrentSeasonCache();
-    historicMatches = historicMatches.filter((match: any) => match.seasonName == currSeason.seasonName);
-
-    const lastSixMatches = historicMatches.splice(0, 6);
-
     let html = '<p>Something broke.. contact MunelitJolty#0447 if you see this message and tell her what you did to get it</p>';
-    await fs.readFile(__dirname.replace("\\", "/") + '/../../res/layouts/teamstats.handlebars').then((data) => {
+    await fs.readFile(__dirname.replace("\\", "/") + '/../../res/layouts/teamplayers.handlebars').then((data) => {
       html = data.toString();
     })
 
+    const players = await vrml.getTeamPlayersCache(teamID);
 
     let backgroundColors = divColor.divisionBasedColor(division);
     let panel = backgroundColors.panel;
     let background = backgroundColors.background;
     let switchDivision = backgroundColors.switchDivision;
 
-    let score;
-    if (switchDivision == "Master" && region != "OA") {
-      score = {
-        mmr: false,
-        score: teamInfo.pts
-      }
-    } else {
-      score = {
-        mmr: true,
-        score: teamInfo.mmr
-      }
-    }
+    // let score;
+    // if (switchDivision == "Master" && region != "OA") {
+    //   score = {
+    //     mmr: false,
+    //     score: teamInfo.pts
+    //   }
+    // } else {
+    //   score = {
+    //     mmr: true,
+    //     score: teamInfo.mmr
+    //   }
+    // }
 
-    let matches = [];
-    for (let i = 0; i < lastSixMatches.length; i++) {
-      let match = lastSixMatches[i];
-
-      let teams = {
-        [match.homeTeam.teamID]: { name: match.homeTeam.teamName.split('<i>')[0], score: match.homeScore },
-        [match.awayTeam.teamID]: { name: match.awayTeam.teamName.split('<i>')[0], score: match.awayScore }
-      }
-      let winningTeam = teams[match.winningTeamID];
-      let losingTeam = teams[match.losingTeamID];
-      let searchedTeamWon = teamInfo.teamID == match.winningTeamID;
-      let datetime = new Date(`${match.dateScheduledUTC} GMT+0000`);
-      let date = dayjs(datetime).format("MMM M");
-      let forfeit = match.isForfeit;
-      let newMatch = {
-        winningTeam,
-        losingTeam,
-        searchedTeamWon,
-        match,
-        date,
-        forfeit
-      }
-      matches.push(newMatch);
+    let mmr = teamInfo.mmr;
+    let score = teamInfo.pts;
+    let cycleScore = teamInfo.cycleScoreTotal;
+    let cycleScorePM = teamInfo.cyclePlusMinus;
+    const content = {
+      logoSource: teamLogoURL,
+      teamName: teamInfo.teamName,
+      ladder: switchDivision != "Master",
+      mmr,
+      score,
+      cycleScore,
+      cycleScorePM,
+      teamWL,
+      divisionLogo: divisionURL,
+      division,
+      players: players.players,
+      panel,
+      background,
+      recruiting
     }
 
     let image = await nodeHtmlToImage({
       html: html,
-      content: {
-        logoSource: teamLogoURL,
-        teamName: teamName,
-        score,
-        teamWL: teamWL,
-        divisionURL,
-        division,
-        panel,
-        background,
-        matches,
-        rank,
-        region
-      }
+      content
     }) as Buffer;
 
     let attach = new MessageAttachment(image, 'teamstats.png');

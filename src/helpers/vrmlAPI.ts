@@ -108,3 +108,8 @@ export async function getCurrentSeasonCache() {
     let seasons = await cache.fetchCustomExpireOneArg(`vrml/seasons`, getSeasons, 'notNeeded', ONE_DAY * 30);
     return seasons[seasons.length - 1];
 }
+
+export async function getTeamPlayersCache(teamID: string) {
+    let data = await cache.fetchOneArg(`vrml/Teams/${teamID}/Players`, getTeamPlayers, teamID);
+    return data;
+}

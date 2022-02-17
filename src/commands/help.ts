@@ -9,7 +9,7 @@ module.exports = {
 
     //Main execution function, this is where you should put command logic
     async execute({ interaction }: { interaction: CommandInteraction }) {
-        await interaction.deferReply();
+        await interaction.deferReply({ephemeral: true});
         let prefix = "/";
         const embed = new MessageEmbed()
             .setAuthor({name: "Created by MoonlitJolteon", iconURL: 'https://cdn.discordapp.com/icons/757624148800569506/a_1a0bee00615783ef293ca179af37434c.webp', url: 'https://ko-fi.com/moonlitjolteon'})
@@ -26,10 +26,11 @@ module.exports = {
                 "Do you like Jolt?",
                 "This is a public bot! You can invite it to your own server with this link https://dsc.gg/jolt-vrml"
             )
+            .addField(
+                `${prefix}timezone set <timezone>`,
+                "This is used to set the server's timezone. This is useful for the upcoming command if you're in a timezone other than Eastern Time"
+            )
             // .addField(
-            //     `${prefix}timezone set <timezone>`,
-            //     "This is used to set the server's timezone. This is useful for the upcoming command if you're in a timezone other than Eastern Time"
-            // ).addField(
             //     `${prefix}timezone clear`,
             //     "This is used to reset the server's timezone back to America/New_York. (Eastern Time)"
             // )
@@ -50,16 +51,17 @@ module.exports = {
             // .addField(
             //     `${prefix}groupstats [teamname]`,
             //     "This will get the stats for each player on your team or the team you search for."
-            // ).addField(
-            //     `${prefix}upcoming [teamname]`,
-            //     "This will get the upcoming matches for your team or the team you searched for, as well as display the date it's scheduled for."
-            // ).addField(
-            //     `${prefix}teamplayers [teamname]`,
-            //     "This will display some team information as well as list the players for your team or the team you search for"
             // )
             .addField(
-                "Donations always welcome!",
-                "[Buy me a coffee!](https://ko-fi.com/moonlitjolteon)"
+                `${prefix}upcoming [teamname]`,
+                "This will get the upcoming matches for your team or the team you searched for, as well as display the date it's scheduled for."
+            ).addField(
+                `${prefix}players [teamname]`,
+                "This will display some team information as well as list the players for your team or the team you search for"
+            )
+            .addField(
+                "Not Command Stuff",
+                "[Buy me a coffee!](https://ko-fi.com/moonlitjolteon) - [Privacy Policy](https://moonlitjolteon.github.io/Jolt/privacy-policy) - [Terms of Service](https://moonlitjolteon.github.io/Jolt/tos)"
             );
             await interaction.editReply({ embeds: [embed] });
 
