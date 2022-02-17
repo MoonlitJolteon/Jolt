@@ -7,6 +7,7 @@ import { bot } from '../../index';
 import * as ignite from '../../helpers/igniteAPI';
 import * as vrml from '../../helpers/vrmlAPI';
 import * as divColor from '../../helpers/divisionBasedColors';
+import { LaunchOptions } from "puppeteer";
 
 let errorNoUser = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Please set your oculus name first using \`/oculusname\`, or search for another user by specifying a user.`);
 let errorNoTeam = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("I was unable to find the team, please make sure you spelled the team name correctly. Do note that if the team is retired, or has never gone active, I won't be able to find your team.");
@@ -147,7 +148,13 @@ module.exports = {
         matches,
         rank,
         region
-      }
+      },
+      puppeteerArgs: {
+          args: ['--no-sandbox',
+              '--disable-accelerated-2d-canvas',
+              '--no-first-run',
+              '--disable-gpu']
+      } as LaunchOptions
     }) as Buffer;
 
     let attach = new MessageAttachment(image, 'teamstats.png');

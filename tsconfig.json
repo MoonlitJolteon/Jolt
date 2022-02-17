@@ -15,6 +15,7 @@
         "forceConsistentCasingInFileNames": true,
         "removeComments": true,
         "typeRoots": [
+            "custimTypes",
             "node_modules/@types"
         ],
         "sourceMap": false,

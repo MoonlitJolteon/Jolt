@@ -7,6 +7,7 @@ import * as ignite from '../../helpers/igniteAPI';
 import * as vrml from '../../helpers/vrmlAPI';
 import * as divColor from '../../helpers/divisionBasedColors';
 import * as supporters from '../../res/supporters.json';
+import { LaunchOptions, Puppeteer } from "puppeteer";
 
 let errorNoUser = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Please set your oculus name first using \`/oculusname\`, or search for another user by specifying a user.`);
 let errorNoStats = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("I was unable to find your stats, please make sure you spelled your oculus username correctly, caps matter. Also note that this feature is powered by Ignite stats, and if you haven't been spectated by `www.ignitevr.gg` before than it won't know you exist");
@@ -100,10 +101,16 @@ module.exports = {
             win_rate: `${round((playerStats.total_wins / playerStats.game_count) * 100, 2)}%`,
             save_rate: round(playerStats.total_saves / playerStats.game_count, 2)
         }
-
+        
         let image = await nodeHtmlToImage({
             html,
-            content
+            content,
+            puppeteerArgs: {
+                args: ['--no-sandbox',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--disable-gpu']
+            } as LaunchOptions
         }) as Buffer;
 
 
@@ -114,7 +121,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle(`Stats for ${igniteData.player[0].player_name}:`)
             .setImage(`attachment://stats.png`)
-            .setFooter({text: "Created by MoonlitJolteon, Bot available here: https://dcs.gg/jolt-vrml"});
+            .setFooter({ text: "Created by MoonlitJolteon, Bot available here: https://dcs.gg/jolt-vrml" });
         if (supporterThanks) embed.setDescription(supporterThanks);
         else embed.setDescription("Those who donate get a custom quote here! [Click here to donate, and make sure to give your username and quote!](https://ko-fi.com/moonlitjolteon)");
         interaction.editReply({ embeds: [embed], files: [attach] });
