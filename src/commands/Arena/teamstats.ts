@@ -109,8 +109,6 @@ module.exports = {
     let matches = [];
     for (let i = 0; i < lastSixMatches.length; i++) {
       let match = lastSixMatches[i];
-    //   console.log(match);
-    //   break;
 
       let teams = {
         [match.homeTeam.teamID]: { name: match.homeTeam.teamName.split('<i>')[0], score: match.homeScore },
@@ -147,8 +145,7 @@ module.exports = {
         matches,
         rank,
         region
-      },
-      puppeteerArgs: { args: ['--no-sandbox'] }
+      }
     }) as Buffer;
 
     let attach = new MessageAttachment(image, 'teamstats.png');
