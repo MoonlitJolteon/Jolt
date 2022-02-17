@@ -154,7 +154,7 @@ module.exports = {
               '--disable-accelerated-2d-canvas',
               '--no-first-run',
               '--disable-gpu']
-      } as LaunchOptions
+      }
     }) as Buffer;
 
     let attach = new MessageAttachment(image, 'teamstats.png');

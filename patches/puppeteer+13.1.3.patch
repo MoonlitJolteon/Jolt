@@ -1,0 +1,12 @@
+diff --git a/node_modules/puppeteer/lib/types.d.ts b/node_modules/puppeteer/lib/types.d.ts
+index 162187c..296241e 100644
+--- a/node_modules/puppeteer/lib/types.d.ts
++++ b/node_modules/puppeteer/lib/types.d.ts
+@@ -3729,6 +3729,7 @@ export declare class HTTPResponse {
+          * @defaultValue true
+          */
+         waitForInitialPage?: boolean;
++        args?: string[];
+     }
+ 
+     /**
