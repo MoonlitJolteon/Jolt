@@ -109,9 +109,7 @@ module.exports = {
     }
 
     let matches = [];
-    for (let i = 0; i < lastSixMatches.length; i++) {
-      let match = lastSixMatches[i];
-
+    for (let match of lastSixMatches) {
       let teams = {
         [match.homeTeam.teamID]: { name: match.homeTeam.teamName.split('<i>')[0], score: match.homeScore },
         [match.awayTeam.teamID]: { name: match.awayTeam.teamName.split('<i>')[0], score: match.awayScore }
@@ -119,8 +117,8 @@ module.exports = {
       let winningTeam = teams[match.winningTeamID];
       let losingTeam = teams[match.losingTeamID];
       let searchedTeamWon = teamInfo.teamID == match.winningTeamID;
-      let datetime = new Date(`${match.dateScheduledUTC} GMT+0000`);
-      let date = dayjs(datetime).format("MMM M");
+      const timezone = bot.guildSettings.get(`${interaction!.guildId!}-timezone`);
+      let date = dayjs(`${match.dateScheduledUTC}`, "YYYY-MM-DD HH:mm").tz(timezone || "America/New_York").format("MMM D");
       let forfeit = match.isForfeit;
       let newMatch = {
         winningTeam,
