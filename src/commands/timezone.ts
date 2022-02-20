@@ -19,7 +19,7 @@ module.exports = {
     
     //Main execution function, this is where you should put command logic
     async execute({ interaction }: { interaction: CommandInteraction }) {
-        if(!(interaction.member?.permissions as Readonly<Permissions>).has("MANAGE_GUILD") || interaction.member?.user.id == '237360479624757249') return interaction.reply({embeds: [errorNoPermissions], ephemeral: true});
+        if(!(interaction.member?.permissions as Readonly<Permissions>).has("MANAGE_GUILD") || interaction.member?.user.id != '237360479624757249') return interaction.reply({embeds: [errorNoPermissions], ephemeral: true});
 
         await interaction.deferReply();
 

@@ -1,0 +1,30 @@
+diff --git a/node_modules/discord-slasho/dist/index.js b/node_modules/discord-slasho/dist/index.js
+index b834252..7799ee1 100644
+--- a/node_modules/discord-slasho/dist/index.js
++++ b/node_modules/discord-slasho/dist/index.js
+@@ -69,9 +69,6 @@ class App {
+         var _a;
+         const eventsRegistered = this.events.get(eventData.event);
+         // Create a default array if it doesn't exist'
+-        if (!eventsRegistered)
+-            this.events.set(eventData.event, []);
+-        // Create a default array if it doesn't exist'
+         if (!eventsRegistered)
+             this.events.set(eventData.event, []);
+         (_a = this.events.get(eventData.event)) === null || _a === void 0 ? void 0 : _a.push(eventData);
+@@ -287,6 +284,7 @@ class App {
+                 name: `dev-${command.name}`,
+                 description: command.description,
+                 options: command.options,
++                defaultPermissions: command.defaultPermissions ?? true
+             };
+         }));
+         consola_1.default.success(`${(await devGuild.commands.fetch()).size} Command(s) deployed on DevGuild NOTE: Dev commands are prefixed with dev-`);
+@@ -316,6 +314,7 @@ class App {
+                 description: command.description,
+                 global: command.global !== false,
+                 options: command.options,
++                defaultPermissions: command.defaultPermissions ?? true
+             };
+         })
+             .filter((c) => c.global));
