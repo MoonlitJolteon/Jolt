@@ -164,8 +164,25 @@ module.exports = {
     let attach = new MessageAttachment(image, 'teamstats.png');
     let embed = new MessageEmbed()
       .setTitle(`${teamInfo.teamName}'s stats:`)
-      .setDescription(`This only shows the most recent 6 games.\n${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
-      .setImage(`attachment://teamstats.png`);
+      .setDescription(`${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
+      .setImage(`attachment://teamstats.png`)
+      .setFooter({text: `If this server works out of a different timezone than displayed, the server admins can run \`/timezone set <timezone abbrevation>\` to change what timezone this is based on.`});
+
+    matches.forEach(match => {
+      if (match.match.castingInfo.caster) {
+        if (match.match.castingInfo.channelURL) {
+          embed.addField(
+            `Casting link for ${match.teams.awayTeam} vs ${match.teams.homeTeam}:`,
+            `${match.match.castingInfo.channelURL}`
+          );
+        } else {
+          embed.addField(
+            `Casting link for ${match.teams.awayTeam} vs ${match.teams.homeTeam}:`,
+            `No Link Available Yet`
+          );
+        }
+      }
+    })
     interaction.editReply({ embeds: [embed], files: [attach] });
 
 
