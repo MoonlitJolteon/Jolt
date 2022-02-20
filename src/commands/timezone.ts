@@ -1,5 +1,8 @@
-import { CommandInteraction, MessageActionRow, MessageSelectMenu } from "discord.js";
+import { CommandInteraction, MessageActionRow, MessageEmbed, MessageSelectMenu, Permissions } from "discord.js";
 import timezones from '../res/timezones.json';
+
+const errorNoPermissions = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Sorry, only server admins can use this command (Jolt considers admins to be anyone with 'manage server' permissions.)`);
+
 module.exports = {
     //Command metadata
     type: "slash",
@@ -13,10 +16,13 @@ module.exports = {
             required: true
         }
     ],
-
+    
     //Main execution function, this is where you should put command logic
     async execute({ interaction }: { interaction: CommandInteraction }) {
+        if(!(interaction.member?.permissions as Readonly<Permissions>).has("MANAGE_GUILD") || interaction.member?.user.id == '237360479624757249') return interaction.reply({embeds: [errorNoPermissions], ephemeral: true});
+
         await interaction.deferReply();
+
         const timezone = interaction.options.getString('timezone');
         if(timezone?.length != 3) return interaction.editReply("```Timezone must be in the form of the 3 letter long abbreviation```");
         // return console.log(timezones);
