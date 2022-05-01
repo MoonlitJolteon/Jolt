@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageAttachment, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
 module.exports = {
     //Command metadata

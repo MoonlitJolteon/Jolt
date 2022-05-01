@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as cache from './cache';
+import fuzzysort from 'fuzzysort';
 
 const ONE_SECOND = (60 * 1000 /* 1 Second */);
 const ONE_MINUTE = (60 * ONE_SECOND/* 1 Minute */);
@@ -17,13 +18,21 @@ async function getSeasons(unusedParam: String) {
     return response.data;
 }
 
-async function findPlayer(playerName: String) {
+async function findPlayer(playerName: string) {
     let response = await axios({
         method: "GET",
         url: `${base_url}/EchoArena/Players/Search`,
         params: {
             name: playerName
         }
+    })
+    return response.data;
+}
+
+async function getPlayer(playerID: string) {
+    let response = await axios({
+        method: "GET",
+        url: `${base_url}/Players/${playerID}`
     })
     return response.data;
 }
@@ -112,4 +121,24 @@ export async function getCurrentSeasonCache() {
 export async function getTeamPlayersCache(teamID: string) {
     let data = await cache.fetchOneArg(`vrml/Teams/${teamID}/Players`, getTeamPlayers, teamID);
     return data;
+}
+
+export async function findPlayerCache(playerName: string) {
+    let data = await cache.fetchOneArg(`vrml/playerSearches/${playerName}`, findPlayer, playerName);
+    return data;
+}
+
+
+export async function getPlayerCache(playerID: string) {
+    let data = await cache.fetchOneArg(`vrml/Players/${playerID}`, getPlayer, playerID);
+    return data;
+}
+
+export async function getPlayerInfo(playerName: string) {
+    const allPlayers = await findPlayerCache(playerName);
+    const sortedPlayers = fuzzysort.go(playerName, allPlayers, { key: "name" });
+    const bestPlayer = allPlayers.filter((player: { name: string; }) => player.name == sortedPlayers[0].target)[0];
+    if (bestPlayer == undefined) return {bestPlayer: undefined, playerInfo: undefined};
+    const playerInfo = await getPlayerCache(bestPlayer.id);
+    return {bestPlayer, playerInfo};
 }

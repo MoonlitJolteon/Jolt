@@ -10,7 +10,8 @@ import * as supporters from '../../res/supporters.json';
 import { LaunchOptions, Puppeteer } from "puppeteer";
 
 let errorNoUser = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`Please set your oculus name first using \`/oculusname\`, or search for another user by specifying a user.`);
-let errorNoStats = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("I was unable to find your stats, please make sure you spelled your oculus username correctly, caps matter. Also note that this feature is powered by Ignite stats, and if you haven't been spectated by `www.ignitevr.gg` before than it won't know you exist");
+// let errorNoPlayer = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription(`It would appear that there`);
+let errorNoStats = new MessageEmbed().setColor("#FF0000").setTitle("Error").setDescription("I was unable to find your stats. Also note that this feature is powered by Ignite stats, and if you haven't been spectated by `www.ignitevr.gg` before than it won't find any stats.");
 
 
 function round(num: number, places: number) {
@@ -40,26 +41,29 @@ module.exports = {
             userToFind = await bot.oculusNames.get(interaction!.member!.user.id);
         }
         if (userToFind == undefined) return interaction.editReply({ embeds: [errorNoUser] });
+        const {bestPlayer, playerInfo} = await vrml.getPlayerInfo(userToFind);
+        
+        if (bestPlayer == undefined) return interaction.editReply({ embeds: [errorNoStats] });
 
-        let igniteData = await ignite.getPlayerCache(userToFind);
-        if (igniteData == undefined) return interaction.editReply({ embeds: [errorNoStats] });
+        let igniteData = await ignite.getPlayerCache(bestPlayer.name);
+        // if (igniteData == undefined) return interaction.editReply({ embeds: [errorNoStats] });
 
         let html = '<p>Something broke.. contact MunelitJolty#0447 if you see this message and tell her what you did to get it</p>';
         await fs.readFile(__dirname.replace("\\", "/") + '/../../res/layouts/stats.handlebars').then(data => {
             html = data.toString();
         });
 
-        const vrml_player = igniteData.vrml_player;
+        const vrml_player = playerInfo;
         let avatarURL: string;
-        if (igniteData.vrml_player == undefined) avatarURL = "http://www.readyatdawn.com/wp-content/uploads/2017/07/GAMES_echoarena_render_character_06.jpg";
-        else avatarURL = vrml_player?.player_logo;
+        if (vrml_player == undefined) avatarURL = "http://www.readyatdawn.com/wp-content/uploads/2017/07/GAMES_echoarena_render_character_06.jpg";
+        else avatarURL = `https://vrmasterleague.com${vrml_player?.userLogo}`;
 
-        const teamName = vrml_player?.team_name;
-        const teamExists = vrml_player.team_name != undefined;
-        const teamInfo = teamExists ? await vrml.getTeamInfoCache(vrml_player.team_id) : undefined;
-        const teamLogoURL = teamExists ? vrml_player.team_logo : undefined;
-        const divisionURL = teamExists ? teamInfo!.divisionLogo : undefined;
-        const division = teamExists ? teamInfo!.divisionName : undefined;
+        const teamName = vrml_player?.teamName;
+        const teamExists = vrml_player.teamName != undefined;
+        const teamInfo = teamExists ? await vrml.getTeamInfoCache(vrml_player.teamID) : undefined;
+        const teamLogoURL = teamExists ? `https://vrmasterleague.com${teamInfo.teamLogo}` : undefined;
+        const divisionURL = teamExists ? `https://vrmasterleague.com${teamInfo.divisionLogo}` : undefined;
+        const division = teamExists ? teamInfo.divisionName : undefined;
         const teamWL = teamExists ? `${teamInfo.w}-${teamInfo.l}` : undefined;
 
         const backgroundColors = teamExists ? divColor.divisionBasedColor(division) : divColor.defaultColorScheme;
@@ -82,8 +86,30 @@ module.exports = {
                 }
             }
         }
-
-        const playerStats = igniteData.player[0];
+        
+        const playerStats = igniteData?.player[0] ?? {
+            game_count: 0,
+            inverted_time: 0,
+            play_time: 0,
+            player_number: 0,
+            possession_time: 0,
+            profile_image: null,
+            profile_page: null,
+            total_2_pointers: 0,
+            total_3_pointers: 0,
+            total_assists: 0,
+            total_blocks: 0,
+            total_catches: 0,
+            total_goals: 0,
+            total_interceptions: 0,
+            total_passes: 0,
+            total_points: 0,
+            total_saves: 0,
+            total_shots_taken: 0,
+            total_steals: 0,
+            total_stuns: 0,
+            total_wins: 0
+          };
 
         const content = {
             avatarSource: avatarURL,
@@ -92,14 +118,14 @@ module.exports = {
             teamName,
             score,
             teamWL,
-            username: userToFind,
+            username: bestPlayer.name ?? "Unknown",
             division: divisionURL,
             panel,
             background,
             playerStats,
             playerStatsError: undefined,
-            win_rate: `${round((playerStats.total_wins / playerStats.game_count) * 100, 2)}%`,
-            save_rate: round(playerStats.total_saves / playerStats.game_count, 2)
+            win_rate: `${isNaN(round((playerStats.total_wins / playerStats.game_count) * 100, 2)) ? 0 : round((playerStats.total_wins / playerStats.game_count) * 100, 2)}%`,
+            save_rate: isNaN(round(playerStats.total_saves / playerStats.game_count, 2)) ? 0 : round(playerStats.total_saves / playerStats.game_count, 2)
         }
 
         let image = await nodeHtmlToImage({
@@ -113,7 +139,7 @@ module.exports = {
         let attach = new MessageAttachment(image, 'stats.png');
         const supporterThanks = (supporters as any)[userToFind.toLowerCase()];
         const embed = new MessageEmbed()
-            .setTitle(`Stats for ${igniteData.player[0].player_name}:`)
+            .setTitle(`Stats for ${bestPlayer.name}:`)
             .setImage(`attachment://stats.png`)
             .setFooter({ text: "Created by MoonlitJolteon, Bot available here: https://dcs.gg/jolt-vrml" });
         if (supporterThanks) embed.setDescription(supporterThanks);
