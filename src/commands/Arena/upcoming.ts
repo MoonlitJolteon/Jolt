@@ -62,8 +62,8 @@ module.exports = {
 
     const teamInfo = await vrml.getTeamInfoCache(teamID);
     if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
-    const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
-    const divisionURL = `https://www.vrmasterleague.com/${teamInfo.divisionLogo}`
+    const teamLogoURL = `http://vrmasterleague.com/${teamInfo.teamLogo}`
+    const divisionURL = `http://vrmasterleague.com/${teamInfo.divisionLogo}`
     const division = teamInfo.divisionName;
     const teamWL = `${teamInfo.w}-${teamInfo.l}`
     const rank = teamInfo.rank;
@@ -126,7 +126,9 @@ module.exports = {
 
       let generated = new Date();
       generated.setDate(generated.getDate() - (generated.getDay() + 6) % 7);
-      generated.setHours(9, 0, 0, 0);
+      generated.setHours(13, 0, 0, 0);
+      //console.log(date);
+      //console.log(dayjs(generated).tz("America/New_York").format("dddd D [@] h:mmA z"));
       let scheduled = generated < datetime;
       let current = new Date()
       let pastTime = current > datetime;

@@ -54,8 +54,8 @@ module.exports = {
     }
     const teamInfo = await vrml.getTeamInfoCache(teamID);
     if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
-    const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
-    const divisionURL = `https://www.vrmasterleague.com/${teamInfo.divisionLogo}`
+    const teamLogoURL = `https://vrmasterleague.com${teamInfo.teamLogo}`
+    const divisionURL = `https://vrmasterleague.com${teamInfo.divisionLogo}`
     const division = teamInfo.divisionName;
     const teamWL = `${teamInfo.w}-${teamInfo.l}`
     const rank = teamInfo.rank;

@@ -56,8 +56,8 @@ module.exports = {
     
     const teamInfo = await vrml.getTeamInfoCache(teamID);
     if (teamInfo == undefined) return interaction.editReply({ embeds: [errorNoTeam] });
-    const teamLogoURL = `https://www.vrmasterleague.com/${teamInfo.teamLogo}`
-    const divisionURL = `https://www.vrmasterleague.com/${teamInfo.divisionLogo}`
+    const teamLogoURL = `http://vrmasterleague.com/${teamInfo.teamLogo}`
+    const divisionURL = `http://vrmasterleague.com/${teamInfo.divisionLogo}`
     const division = teamInfo.divisionName;
     const teamWL = `${teamInfo.w}-${teamInfo.l}`
     const rank = teamInfo.rank;
@@ -133,7 +133,7 @@ module.exports = {
     let attach = new MessageAttachment(image, 'teamstats.png');
     let embed = new MessageEmbed()
       .setTitle(`${teamInfo.teamName}'s stats:`)
-      .setDescription(`This only shows the most recent 6 games.\n${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
+      .setDescription(`${teamInfo.bio.discordInvite ? `Team Discord: ${teamInfo.bio.discordInvite}` : ""}\nTeam Page: [Click Here](https://vrmasterleague.com/EchoArena/Teams/${teamInfo.teamID})`)
       .setImage(`attachment://teamstats.png`);
     interaction.editReply({ embeds: [embed], files: [attach] });
 
