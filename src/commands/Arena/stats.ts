@@ -52,17 +52,17 @@ module.exports = {
         await fs.readFile(__dirname.replace("\\", "/") + '/../../res/layouts/stats.handlebars').then(data => {
             html = data.toString();
         });
-
-        const vrml_player = playerInfo;
+	const streamURL = playerInfo.user.streamUrl;
+        const vrml_player = playerInfo.thisGame.bioCurrent;
         let avatarURL: string;
         if (vrml_player == undefined) avatarURL = "http://www.readyatdawn.com/wp-content/uploads/2017/07/GAMES_echoarena_render_character_06.jpg";
-        else avatarURL = `https://vrmasterleague.com${vrml_player?.userLogo}`;
+        else avatarURL = `http://vrmasterleague.com${vrml_player?.userLogo}`;
 
         const teamName = vrml_player?.teamName;
         const teamExists = vrml_player.teamName != undefined;
         const teamInfo = teamExists ? await vrml.getTeamInfoCache(vrml_player.teamID) : undefined;
-        const teamLogoURL = teamExists ? `https://vrmasterleague.com${teamInfo.teamLogo}` : undefined;
-        const divisionURL = teamExists ? `https://vrmasterleague.com${teamInfo.divisionLogo}` : undefined;
+        const teamLogoURL = teamExists ? `http://vrmasterleague.com${teamInfo.teamLogo}` : undefined;
+        const divisionURL = teamExists ? `http://vrmasterleague.com${teamInfo.divisionLogo}` : undefined;
         const division = teamExists ? teamInfo.divisionName : undefined;
         const teamWL = teamExists ? `${teamInfo.w}-${teamInfo.l}` : undefined;
 
@@ -134,17 +134,19 @@ module.exports = {
         }) as Buffer;
 
 
-
-
         let attach = new MessageAttachment(image, 'stats.png');
         const supporterThanks = (supporters as any)[userToFind.toLowerCase()];
         const embed = new MessageEmbed()
             .setTitle(`Stats for ${bestPlayer.name}:`)
             .setImage(`attachment://stats.png`)
             .setFooter({ text: "Created by MoonlitJolteon, Bot available here: https://dcs.gg/jolt-vrml" });
-        if (supporterThanks) embed.setDescription(supporterThanks);
-        else embed.setDescription("Those who donate get a custom quote here! [Click here to donate, and make sure to give your username and quote!](https://ko-fi.com/moonlitjolteon)");
-        interaction.editReply({ embeds: [embed], files: [attach] });
+	let desc = ""
+        if (supporterThanks) desc += supporterThanks;
+        else desc += "Those who donate get a custom quote here! [Click here to donate, and make sure to give your username and quote!](https://ko-fi.com/moonlitjolteon)";
+        if (streamURL != null) desc += `\n\n This player has a twitch channel [(Click here!)](${streamURL})`;
+	embed.setDescription(desc);
+
+	interaction.editReply({ embeds: [embed], files: [attach] });
 
     }
 } 
