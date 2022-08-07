@@ -117,10 +117,7 @@
 
 <body {{{background}}}>
   <div>
-
-    <img src={{avatarSource}} id="avatar" {{#if
-      teamExists}}{{else}}style="display: block !important; margin-left: auto !important; margin-right: auto !important;"
-      {{/if}}>
+    <img src={{avatarSource}} id="avatar">
     {{#if teamExists}}
     <div id="team-info" class="inline" {{{panel}}}>
       <img src={{logoSource}} id="team-logo">
@@ -131,7 +128,7 @@
         {{else}}
         Score: {{score.score}}<br>
         {{/if}}
-        W/L: {{teamWL}}<br>
+        Cooldown: {{cooldown}}<br>
         Oculus Username:<br>
         {{username}}
       </h>
@@ -140,9 +137,20 @@
       {{/if}}
     </div>
     {{else}}
-    {{#if country}}
-    <img src=https://flagcdn.com/108x81/{{country}}.png id="country-flag" class="inline">
-    {{/if}}
+    <div id="team-info" class="inline" {{{panel}}}>
+      <img src={{logoSource}} id="team-logo">
+      <h>
+        League Substitute<br>
+        Sub MMR: {{score.score}}<br>
+        Cooldown: {{cooldown}}<br>
+        Oculus Username:<br>
+        {{username}}
+      </h>
+      {{#if teamExists}}
+      <img src={{divisionURL}} id="division-logo" class="inline">
+      {{/if}}
+    </div>
+
     {{/if}}
     <div id="player-info" {{{panel}}}>
       {{#if teamExists}}

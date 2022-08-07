@@ -26,6 +26,16 @@ async function findPlayer(playerName: string) {
             name: playerName
         }
     })
+    if(response.data.length == 0) {
+        response = await axios({
+            method: "GET",
+            url: `${base_url}/EchoArena/Substitutes/Search`,
+            params: {
+                name: playerName
+            }
+        })
+    }
+
     return response.data;
 }
 
@@ -91,6 +101,14 @@ async function getTeamUpcomingMatches(teamID: String) {
 }
 
 
+
+export async function getSubstitutes() {
+    let response = await axios({
+        method: "GET",
+        url: `${base_url}/EchoArena/Substitutes`
+    })
+    return response.data;
+}
 
 export async function getTeamInfoCache(id: string) {
     let data = await cache.fetchOneArg(`vrml/Teams/${id}/Info`, getTeamInfo, id);
